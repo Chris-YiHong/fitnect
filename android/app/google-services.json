@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "34634631622",
+    "project_id": "fitnect-app",
+    "storage_bucket": "fitnect-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34634631622:android:885aa3c93c73d511100ac7",
+        "android_client_info": {
+          "package_name": "com.fitnect.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34634631622-p4v2tvim89i31ljndm82h10l4mh72u09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy0zejT9zDu1Jmi7JNkXJkRhqLRyAqj04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34634631622-p4v2tvim89i31ljndm82h10l4mh72u09.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "34634631622-90io1akar5hsbco3lrmn7r4nggsptuhj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitnect.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
