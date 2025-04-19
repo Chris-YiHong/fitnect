@@ -18,14 +18,37 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
       colors: colors,
       defaultTextTheme: defaultTextStyle,
       materialTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: colors.primary).copyWith(
-          surface: colors.surface,
-          onSurface: colors.onSurface,
+        useMaterial3: true,
+        fontFamily: 'PTSans',
+        colorScheme: ColorScheme(
+          brightness:
+              colors == FitNectColors.dark()
+                  ? Brightness.dark
+                  : Brightness.light,
           primary: colors.primary,
           onPrimary: colors.onPrimary,
+          secondary: colors.accent,
+          onSecondary: colors.onSurface,
           error: colors.error,
+          onError: colors.neutral,
+          background: colors.background,
+          onBackground: colors.onBackground,
+          surface: colors.surface,
+          onSurface: colors.onSurface,
+          tertiary: colors.secondary,
+          onTertiary: colors.onSurface,
+          outline: colors.grey1,
+          shadow: colors.neutralGrey,
         ),
         elevatedButtonTheme: elevatedButtonTheme(
+          colors: colors,
+          textTheme: defaultTextStyle,
+        ),
+        outlinedButtonTheme: outlinedButtonTheme(
+          colors: colors,
+          textTheme: defaultTextStyle,
+        ),
+        textButtonTheme: textButtonTheme(
           colors: colors,
           textTheme: defaultTextStyle,
         ),
@@ -46,6 +69,33 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
           foregroundColor: colors.onSurface,
           elevation: 0,
         ),
+        scaffoldBackgroundColor: colors.background,
+        cardTheme: CardTheme(
+          color: colors.surface,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        dividerTheme: DividerThemeData(
+          color: colors.grey1,
+          thickness: 1,
+          space: 1,
+        ),
+        chipTheme: ChipThemeData(
+          backgroundColor: colors.surface,
+          disabledColor: colors.grey1,
+          selectedColor: colors.primary,
+          secondarySelectedColor: colors.accent,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          labelStyle: defaultTextStyle.body2,
+          secondaryLabelStyle: defaultTextStyle.body2,
+          brightness:
+              colors == FitNectColors.dark()
+                  ? Brightness.dark
+                  : Brightness.light,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     );
   }
@@ -58,14 +108,12 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
     elevation: 0,
     selectedIconTheme: IconThemeData(color: colors.primary),
     unselectedIconTheme: IconThemeData(color: colors.grey2),
-    selectedLabelTextStyle: textTheme.primary.copyWith(
+    selectedLabelTextStyle: textTheme.body2.copyWith(
       color: colors.primary,
-      fontSize: 16,
       fontWeight: FontWeight.w700,
     ),
-    unselectedLabelTextStyle: textTheme.primary.copyWith(
+    unselectedLabelTextStyle: textTheme.body2.copyWith(
       color: colors.onSurface,
-      fontSize: 16,
       fontWeight: FontWeight.w700,
     ),
   );
@@ -78,16 +126,32 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
       minimumSize: const Size(200, 48),
       foregroundColor: colors.onPrimary,
       backgroundColor: colors.primary,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(width: 2, color: colors.primary.withValues(alpha: .8)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      textStyle: textTheme.primary.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w700,
-        color: colors.onPrimary,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      textStyle: textTheme.buttonMainpage,
       elevation: 0,
+    ),
+  );
+
+  OutlinedButtonThemeData outlinedButtonTheme({
+    required FitNectColors colors,
+    required FitNectTextTheme textTheme,
+  }) => OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      minimumSize: const Size(200, 48),
+      foregroundColor: colors.primary,
+      side: BorderSide(color: colors.primary, width: 2),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      textStyle: textTheme.buttonSubpage,
+    ),
+  );
+
+  TextButtonThemeData textButtonTheme({
+    required FitNectColors colors,
+    required FitNectTextTheme textTheme,
+  }) => TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: colors.accent,
+      textStyle: textTheme.hyperlink,
     ),
   );
 
@@ -98,7 +162,7 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
     fillColor: colors.surface,
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: colors.grey1.withValues(alpha: .15)),
+      borderSide: BorderSide(color: colors.grey1),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
@@ -109,14 +173,10 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
       borderSide: BorderSide(color: colors.error, width: 2),
     ),
     filled: true,
-    hintStyle: textTheme.primary.copyWith(
-      color: colors.grey2,
-      fontSize: 16,
-      fontWeight: FontWeight.w300,
-    ),
-    labelStyle: textTheme.primary.copyWith(color: colors.grey2),
+    hintStyle: textTheme.body2.copyWith(color: colors.grey2),
+    labelStyle: textTheme.body2.copyWith(color: colors.grey2),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5.0),
+      borderRadius: BorderRadius.circular(8.0),
       borderSide: BorderSide(color: colors.grey2),
     ),
   );
@@ -132,10 +192,45 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
     required FitNectColors colors,
     required FitNectTextTheme defaultTextStyle,
   }) => TextTheme(
-    headlineLarge: defaultTextStyle.primary.copyWith(
-      fontSize: 32,
+    // Display
+    displayLarge: defaultTextStyle.heading1.copyWith(
       color: colors.onBackground,
-      fontWeight: FontWeight.w700,
     ),
+    displayMedium: defaultTextStyle.heading2.copyWith(
+      color: colors.onBackground,
+    ),
+    displaySmall: defaultTextStyle.heading3.copyWith(
+      color: colors.onBackground,
+    ),
+
+    // Headline
+    headlineLarge: defaultTextStyle.heading1.copyWith(
+      color: colors.onBackground,
+    ),
+    headlineMedium: defaultTextStyle.heading2.copyWith(
+      color: colors.onBackground,
+    ),
+    headlineSmall: defaultTextStyle.heading3.copyWith(
+      color: colors.onBackground,
+    ),
+
+    // Title
+    titleLarge: defaultTextStyle.heading3.copyWith(color: colors.onBackground),
+    titleMedium: defaultTextStyle.heading4.copyWith(color: colors.onBackground),
+    titleSmall: defaultTextStyle.heading5.copyWith(color: colors.onBackground),
+
+    // Body
+    bodyLarge: defaultTextStyle.body1.copyWith(color: colors.onBackground),
+    bodyMedium: defaultTextStyle.body2.copyWith(color: colors.onBackground),
+    bodySmall: defaultTextStyle.subtext.copyWith(color: colors.onBackground),
+
+    // Label
+    labelLarge: defaultTextStyle.buttonMainpage.copyWith(
+      color: colors.onBackground,
+    ),
+    labelMedium: defaultTextStyle.buttonSubpage.copyWith(
+      color: colors.onBackground,
+    ),
+    labelSmall: defaultTextStyle.hyperlink.copyWith(color: colors.onBackground),
   );
 }

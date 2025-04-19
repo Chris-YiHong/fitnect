@@ -15,6 +15,12 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
   final Color grey3;
   final Color error;
 
+  // New color properties
+  final Color accent;
+  final Color secondary;
+  final Color neutral;
+  final Color neutralGrey;
+
   const FitNectColors({
     required this.primary,
     required this.onPrimary,
@@ -26,6 +32,10 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     required this.grey1,
     required this.grey2,
     required this.grey3,
+    this.accent = Colors.transparent,
+    this.secondary = Colors.transparent,
+    this.neutral = Colors.transparent,
+    this.neutralGrey = Colors.transparent,
   });
 
   factory FitNectColors.light() => const FitNectColors(
@@ -42,16 +52,21 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
   );
 
   factory FitNectColors.dark() => const FitNectColors(
-    primary: Color(0xFF1E88E5),
-    onPrimary: Color(0xFFFFFFFF),
-    background: Color(0xFF0A0A0A),
-    onBackground: Color(0xFFFAFAFA),
-    surface: Color(0xFF161616),
+    // Colors from the design style image
+    primary: Color(0xFFbeef62), // Light green #beef62
+    onPrimary: Color(0xFF1f1b2e), // Dark purple-black
+    background: Color(0xFF1f1b2e), // Dark purple-black #1f1b2e
+    onBackground: Color(0xFFFFFFFF),
+    surface: Color(0xFF1f1b2e), // Dark purple-black #1f1b2e
     onSurface: Color(0xFFFFFFFF),
-    error: Color(0xFFCF6679),
-    grey1: Color(0xFF263238),
+    error: Color(0xFFff5227), // Red #ff5227
+    grey1: Color(0xFF626262), // Grey #626262
     grey2: Color(0xFF7D8488),
     grey3: Color(0xFFBEC1C3),
+    accent: Color(0xFF6f3afe), // Purple #6f3afe
+    secondary: Color(0xFF1f1b2e), // Dark purple-black #1f1b2e
+    neutral: Color(0xFFffffff), // White #ffffff
+    neutralGrey: Color(0xFF626262), // Grey #626262
   );
 
   @override
@@ -66,6 +81,10 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     Color? grey1,
     Color? grey2,
     Color? grey3,
+    Color? accent,
+    Color? secondary,
+    Color? neutral,
+    Color? neutralGrey,
   }) {
     return FitNectColors(
       primary: primary ?? this.primary,
@@ -78,6 +97,10 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       grey1: grey1 ?? this.grey1,
       grey2: grey2 ?? this.grey2,
       grey3: grey3 ?? this.grey3,
+      accent: accent ?? this.accent,
+      secondary: secondary ?? this.secondary,
+      neutral: neutral ?? this.neutral,
+      neutralGrey: neutralGrey ?? this.neutralGrey,
     );
   }
 
@@ -99,6 +122,10 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       grey1: Color.lerp(grey1, other.grey1, t)!,
       grey2: Color.lerp(grey2, other.grey2, t)!,
       grey3: Color.lerp(grey3, other.grey3, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
+      secondary: Color.lerp(secondary, other.secondary, t)!,
+      neutral: Color.lerp(neutral, other.neutral, t)!,
+      neutralGrey: Color.lerp(neutralGrey, other.neutralGrey, t)!,
     );
   }
 }

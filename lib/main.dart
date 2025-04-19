@@ -104,7 +104,7 @@ class MyApp extends ConsumerWidget {
         lightColors: FitNectColors.light(),
         darkColors: FitNectColors.dark(),
         textTheme: FitNectTextTheme.build(),
-        defaultMode: ThemeMode.light,
+        defaultMode: ThemeMode.dark,
       ),
       child: Builder(
         builder: (context) {
