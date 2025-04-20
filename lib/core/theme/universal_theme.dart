@@ -35,6 +35,8 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
           onBackground: colors.onBackground,
           surface: colors.surface,
           onSurface: colors.onSurface,
+          surfaceVariant: colors.surfaceVariant,
+          onSurfaceVariant: colors.onSurfaceVariant,
           tertiary: colors.secondary,
           onTertiary: colors.onSurface,
           outline: colors.grey1,

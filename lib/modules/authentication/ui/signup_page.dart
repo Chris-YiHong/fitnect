@@ -120,20 +120,24 @@ class SignupForm extends ConsumerWidget {
                 // hide keyboard
                 FocusScope.of(context).unfocus();
                 // call signup method
-                ref
-                    .read(signupStateProvider.notifier)
-                    .signup()
-                    .then(
-                      // ignore: use_build_context_synchronously
-                      (_) => context.go('/'),
-                      // we don't provide more details to the user about the error for security reasons
-                      onError:
-                          (err) => showErrorToast(
-                            context: navigatorKey.currentContext!,
-                            title: 'Error',
-                            text: 'This email already exists or is invalid',
-                          ),
-                    );
+                ref.read(signupStateProvider.notifier).signup().then(
+                  // redirect to onboarding flow after successful signup
+                  (success) {
+                    if (success) {
+                      context.goNamed(
+                        'signupOnboarding',
+                        pathParameters: {'step': 'name'},
+                      );
+                    }
+                  },
+                  // we don't provide more details to the user about the error for security reasons
+                  onError:
+                      (err) => showErrorToast(
+                        context: navigatorKey.currentContext!,
+                        title: 'Error',
+                        text: 'This email already exists or is invalid',
+                      ),
+                );
               },
               child: switch (state) {
                 SignupStateData() => const Text('Create my account'),

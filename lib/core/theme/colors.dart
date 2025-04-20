@@ -10,6 +10,9 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
   final Color surface;
   final Color onSurface;
 
+  final Color surfaceVariant;
+  final Color onSurfaceVariant;
+
   final Color grey1;
   final Color grey2;
   final Color grey3;
@@ -28,6 +31,8 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     required this.onBackground,
     required this.surface,
     required this.onSurface,
+    required this.surfaceVariant,
+    required this.onSurfaceVariant,
     required this.error,
     required this.grey1,
     required this.grey2,
@@ -45,6 +50,12 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     onBackground: Color(0xFF000000),
     surface: Color(0xFFFAFAFA),
     onSurface: Color(0xFF000000),
+    surfaceVariant: Color(
+      0xFFE0E0E0,
+    ), // Light grey for input fields, cards, etc.
+    onSurfaceVariant: Color(
+      0xFF757575,
+    ), // Medium grey for text on surfaceVariant
     error: Color(0xFFB00020),
     grey1: Color(0xFFBEC1C3),
     grey2: Color(0xFF7D8488),
@@ -59,6 +70,10 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     onBackground: Color(0xFFFFFFFF),
     surface: Color(0xFF1f1b2e), // Dark purple-black #1f1b2e
     onSurface: Color(0xFFFFFFFF),
+    surfaceVariant: Color(0xFF2A2639), // Slightly lighter than dark background
+    onSurfaceVariant: Color(
+      0xFFCCCCCC,
+    ), // Light grey for text on dark surfaceVariant
     error: Color(0xFFff5227), // Red #ff5227
     grey1: Color(0xFF626262), // Grey #626262
     grey2: Color(0xFF7D8488),
@@ -77,6 +92,8 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     Color? onBackground,
     Color? surface,
     Color? onSurface,
+    Color? surfaceVariant,
+    Color? onSurfaceVariant,
     Color? error,
     Color? grey1,
     Color? grey2,
@@ -93,6 +110,8 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       onBackground: onBackground ?? this.onBackground,
       surface: surface ?? this.surface,
       onSurface: onSurface ?? this.onSurface,
+      surfaceVariant: surfaceVariant ?? this.surfaceVariant,
+      onSurfaceVariant: onSurfaceVariant ?? this.onSurfaceVariant,
       error: error ?? this.error,
       grey1: grey1 ?? this.grey1,
       grey2: grey2 ?? this.grey2,
@@ -118,6 +137,9 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       onBackground: Color.lerp(onBackground, other.onBackground, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       onSurface: Color.lerp(onSurface, other.onSurface, t)!,
+      surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
+      onSurfaceVariant:
+          Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
       error: Color.lerp(error, other.error, t)!,
       grey1: Color.lerp(grey1, other.grey1, t)!,
       grey2: Color.lerp(grey2, other.grey2, t)!,

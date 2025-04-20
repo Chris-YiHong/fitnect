@@ -41,9 +41,9 @@ class SignupStateNotifier extends StateNotifier<SignupState> {
     state = state.copyWith(password: password);
   }
 
-  Future<void> signup() async {
+  Future<bool> signup() async {
     if (state is SignupStateSending) {
-      return;
+      return false;
     }
     try {
       state.email.validate();
@@ -53,6 +53,7 @@ class SignupStateNotifier extends StateNotifier<SignupState> {
       // lets fake a delay to prevent spamming the signup button
       await Future.delayed(const Duration(milliseconds: 1500));
       await _userStateNotifier.onSignin();
+      return true;
     } catch (e, trace) {
       debugPrint("Error while signing up: $e, $trace");
       state = SignupState(email: state.email, password: state.password);
