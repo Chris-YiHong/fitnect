@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/model/onboarding_form_model.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_submission_provider.dart';
@@ -30,6 +31,7 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
   Widget build(BuildContext context) {
     final formData = ref.watch(onboardingFormNotifierProvider);
     final submissionStatus = ref.watch(onboardingSubmissionNotifierProvider);
+    final t = Translations.of(context);
 
     return Center(
       child: Column(
@@ -49,7 +51,7 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
             ),
           const SizedBox(height: 24),
           Text(
-            _getHeadlineText(submissionStatus),
+            _getHeadlineText(submissionStatus, t),
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.onBackground,
@@ -58,7 +60,7 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
           ),
           const SizedBox(height: 16),
           Text(
-            _getSubtitleText(submissionStatus),
+            _getSubtitleText(submissionStatus, t),
             style: context.textTheme.bodyLarge?.copyWith(
               color: context.colors.onBackground.withOpacity(0.7),
             ),
@@ -83,6 +85,8 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
   }
 
   Widget _buildRetryButton(BuildContext context) {
+    final t = Translations.of(context);
+
     return ElevatedButton(
       onPressed: () {
         ref
@@ -96,7 +100,7 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(
-        'Retry',
+        t.signup_onboarding.completed.retry_button,
         style: context.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -104,33 +108,35 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
     );
   }
 
-  String _getHeadlineText(SubmissionStatus status) {
+  String _getHeadlineText(SubmissionStatus status, Translations t) {
     switch (status) {
       case SubmissionStatus.submitting:
-        return 'Processing...';
+        return t.signup_onboarding.completed.processing;
       case SubmissionStatus.success:
-        return "You're all set!";
+        return t.signup_onboarding.completed.success_title;
       case SubmissionStatus.error:
-        return 'Something went wrong';
+        return t.signup_onboarding.completed.error_title;
       default:
-        return 'Preparing your profile';
+        return t.signup_onboarding.completed.preparing;
     }
   }
 
-  String _getSubtitleText(SubmissionStatus status) {
+  String _getSubtitleText(SubmissionStatus status, Translations t) {
     switch (status) {
       case SubmissionStatus.submitting:
-        return 'We are setting up your profile...';
+        return t.signup_onboarding.completed.preparing_subtitle;
       case SubmissionStatus.success:
-        return "Thank you for providing your information. We're excited to start your fitness journey!";
+        return t.signup_onboarding.completed.success_subtitle;
       case SubmissionStatus.error:
-        return "We couldn't complete your registration. Please try again.";
+        return t.signup_onboarding.completed.error_subtitle;
       default:
-        return 'Just a moment while we prepare everything...';
+        return t.signup_onboarding.completed.preparing_subtitle;
     }
   }
 
   Widget _buildSummary(BuildContext context, OnboardingFormModel formData) {
+    final t = Translations.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -142,38 +148,50 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your Profile Summary',
+            t.signup_onboarding.completed.profile_summary,
             style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.onSurface,
             ),
           ),
           const SizedBox(height: 12),
-          _buildSummaryItem(context, 'Name', formData.name ?? 'Not provided'),
-          _buildSummaryItem(context, 'Gender', _formatGender(formData.gender)),
-          _buildSummaryItem(context, 'Age', _calculateAge(formData.birthDate)),
+          _buildSummaryItem(
+            context,
+            t.signup_onboarding.completed.name_label,
+            formData.name ?? 'Not provided',
+          ),
+          _buildSummaryItem(
+            context,
+            t.signup_onboarding.completed.gender_label,
+            _formatGender(formData.gender),
+          ),
+          _buildSummaryItem(
+            context,
+            t.signup_onboarding.completed.age_label,
+            _calculateAge(formData.birthDate),
+          ),
           if (formData.heightCm != null)
             _buildSummaryItem(
               context,
-              'Height',
+              t.signup_onboarding.completed.height_label,
               '${formData.heightCm?.toInt()} cm',
             ),
           if (formData.weightKg != null)
             _buildSummaryItem(
               context,
-              'Weight',
+              t.signup_onboarding.completed.weight_label,
               '${formData.weightKg?.toInt()} kg',
             ),
           if (formData.fitnessGoals.isNotEmpty)
             _buildSummaryItem(
               context,
-              'Goals',
+              t.signup_onboarding.completed.goals_label,
               _formatGoals(formData.fitnessGoals),
             ),
           if (formData.activityLevel != null)
             _buildSummaryItem(
               context,
-              'Activity',
+              t.signup_onboarding.completed.activity_label,
               _formatActivity(formData.activityLevel),
             ),
         ],

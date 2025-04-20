@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/model/onboarding_form_model.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,14 @@ class OnboardingGender extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGender = ref.watch(onboardingFormNotifierProvider).gender;
+    final t = Translations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 40),
         Text(
-          "What's your Gender?",
+          t.signup_onboarding.gender.title,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,
@@ -24,21 +26,33 @@ class OnboardingGender extends ConsumerWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 40),
-        _buildGenderOption(context, 'Male', Gender.male, selectedGender, ref),
+        _buildGenderOption(
+          context,
+          t.signup_onboarding.gender.male,
+          Gender.male,
+          selectedGender,
+          ref,
+        ),
         const SizedBox(height: 20),
         _buildGenderOption(
           context,
-          'Female',
+          t.signup_onboarding.gender.female,
           Gender.female,
           selectedGender,
           ref,
         ),
         const SizedBox(height: 20),
-        _buildGenderOption(context, 'Other', Gender.other, selectedGender, ref),
+        _buildGenderOption(
+          context,
+          t.signup_onboarding.gender.other,
+          Gender.other,
+          selectedGender,
+          ref,
+        ),
         const SizedBox(height: 20),
         _buildGenderOption(
           context,
-          'Prefer not to say',
+          t.signup_onboarding.gender.prefer_not_to_say,
           Gender.preferNotToSay,
           selectedGender,
           ref,

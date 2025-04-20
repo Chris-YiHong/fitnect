@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/model/onboarding_form_model.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,14 @@ class OnboardingActivity extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedActivity =
         ref.watch(onboardingFormNotifierProvider).activityLevel;
+    final t = Translations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 40),
         Text(
-          "What's your activity level?",
+          t.signup_onboarding.activity.title,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,
@@ -26,7 +28,7 @@ class OnboardingActivity extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          "Select the option that best describes your daily activity",
+          t.signup_onboarding.activity.subtitle,
           style: context.textTheme.bodyLarge?.copyWith(
             color: context.colors.onBackground.withOpacity(0.7),
           ),
@@ -35,8 +37,8 @@ class OnboardingActivity extends ConsumerWidget {
         const SizedBox(height: 40),
         _buildActivityOption(
           context,
-          'Sedentary',
-          'Little to no exercise, desk job',
+          t.signup_onboarding.activity.sedentary,
+          t.signup_onboarding.activity.sedentary_description,
           ActivityLevel.sedentary,
           selectedActivity,
           ref,
@@ -44,8 +46,8 @@ class OnboardingActivity extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildActivityOption(
           context,
-          'Light',
-          'Light exercise 1-3 days/week',
+          t.signup_onboarding.activity.light,
+          t.signup_onboarding.activity.light_description,
           ActivityLevel.light,
           selectedActivity,
           ref,
@@ -53,8 +55,8 @@ class OnboardingActivity extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildActivityOption(
           context,
-          'Moderate',
-          'Moderate exercise 3-5 days/week',
+          t.signup_onboarding.activity.moderate,
+          t.signup_onboarding.activity.moderate_description,
           ActivityLevel.moderate,
           selectedActivity,
           ref,
@@ -62,8 +64,8 @@ class OnboardingActivity extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildActivityOption(
           context,
-          'Active',
-          'Hard exercise 6-7 days/week',
+          t.signup_onboarding.activity.active,
+          t.signup_onboarding.activity.active_description,
           ActivityLevel.active,
           selectedActivity,
           ref,
@@ -71,8 +73,8 @@ class OnboardingActivity extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildActivityOption(
           context,
-          'Very Active',
-          'Hard daily exercise and physical job',
+          t.signup_onboarding.activity.very_active,
+          t.signup_onboarding.activity.very_active_description,
           ActivityLevel.veryActive,
           selectedActivity,
           ref,

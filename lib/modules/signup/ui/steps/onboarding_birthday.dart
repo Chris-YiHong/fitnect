@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,15 +37,25 @@ class _OnboardingBirthdayState extends ConsumerState<OnboardingBirthday> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 40),
         Text(
-          "When's your Birthday?",
+          t.signup_onboarding.birthday.title,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          t.signup_onboarding.birthday.subtitle,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.onBackground.withOpacity(0.7),
           ),
           textAlign: TextAlign.center,
         ),

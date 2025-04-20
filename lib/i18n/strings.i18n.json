@@ -96,35 +96,142 @@
             "continue_button": "Allow notifications",
             "skip_button": "Maybe later"
         },
-        
         "loading": {
             "title": "Creating your profile",
             "subtitle": "Wait a few seconds"
         }
     },
     "feature_requests": {
-      "title": "Your opinion matters!",
-      "description": "Vote or suggest new features.\r\nWe listen everyone of you to create the best possible app.",
-      "vote_success": {
-        "title": "Thank you!",
-        "description": "Your vote has been taken into account"
-      },
-      "vote_error": {
-        "title": "Error",
-        "description": "You already voted for a feature"
-      },
-      "add_feature": {
-        "title": "Suggest a feature",
-        "description": "What feature would you like to see in the app?",
-        "save_button": "Send",
-        "title_label": "Feature title",
-        "title_hint": "Enter a short descriptive title",
-        "description_label": "Description",
-        "description_hint": "Describe the feature or the improvement you would like to see in the app",
-        "toast_success": {
-          "title": "Thank you!",
-          "description": "We will review your suggestion"
+        "title": "Your opinion matters!",
+        "description": "Vote or suggest new features.\r\nWe listen everyone of you to create the best possible app.",
+        "vote_success": {
+            "title": "Thank you!",
+            "description": "Your vote has been taken into account"
+        },
+        "vote_error": {
+            "title": "Error",
+            "description": "You already voted for a feature"
+        },
+        "add_feature": {
+            "title": "Suggest a feature",
+            "description": "What feature would you like to see in the app?",
+            "save_button": "Send",
+            "title_label": "Feature title",
+            "title_hint": "Enter a short descriptive title",
+            "description_label": "Description",
+            "description_hint": "Describe the feature or the improvement you would like to see in the app",
+            "toast_success": {
+                "title": "Thank you!",
+                "description": "We will review your suggestion"
+            }
         }
-      }
+    },
+    "signup_onboarding": {
+        "header": {
+            "title": "Welcome to FitNect",
+            "subtitle": "Before we begin, let’s get to know you better!"
+        },
+        "navigation": {
+            "next": "Next",
+            "get_started": "Get Started"
+        },
+        "unknown_step": "Unknown step: $step",
+        "name": {
+            "title": "What's your name?",
+            "placeholder": "Enter your name"
+        },
+        "gender": {
+            "title": "What's your Gender?",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other",
+            "prefer_not_to_say": "Prefer not to say"
+        },
+        "birthday": {
+            "title": "When were you born?",
+            "subtitle": "This helps us customize your fitness plan"
+        },
+        "height": {
+            "title": "What's your height?",
+            "subtitle": "We'll use this to calculate your BMI",
+            "cm": "cm"
+        },
+        "weight": {
+            "title": "What's your weight?",
+            "subtitle": "This helps us track your progress",
+            "kg": "kg"
+        },
+        "fitness_goal": {
+            "title": "What are your fitness goals?",
+            "subtitle": "Select all that apply",
+            "lose_weight": "Lose Weight",
+            "gain_muscle": "Gain Muscle",
+            "improve_fitness": "Improve Fitness",
+            "increase_endurance": "Increase Endurance",
+            "improve_flexibility": "Improve Flexibility",
+            "other": "Other"
+        },
+        "activity": {
+            "title": "What's your activity level?",
+            "subtitle": "This helps us determine your daily calorie needs",
+            "sedentary": "Sedentary",
+            "sedentary_description": "Little to no exercise",
+            "light": "Lightly Active",
+            "light_description": "Light exercise 1-3 days/week",
+            "moderate": "Moderately Active",
+            "moderate_description": "Moderate exercise 3-5 days/week",
+            "active": "Active",
+            "active_description": "Hard exercise 6-7 days/week",
+            "very_active": "Very Active",
+            "very_active_description": "Hard daily exercise & physical job"
+        },
+        "diet": {
+            "title": "What's your diet like?",
+            "subtitle": "Tell us about your eating habits",
+            "placeholder": "Describe your typical diet...",
+            "suggestions_title": "Suggestions:",
+            "suggestion_1": "Vegetarian",
+            "suggestion_2": "Vegan",
+            "suggestion_3": "Keto",
+            "suggestion_4": "Paleo",
+            "suggestion_5": "Balanced"
+        },
+        "injuries_history": {
+            "title": "Do you have any injuries?",
+            "subtitle": "This helps us customize your workouts",
+            "no_injuries": "No injuries to report",
+            "add_injury": "Add an injury",
+            "injury_name": "Injury name",
+            "injury_description": "Description",
+            "injury_date": "Date:",
+            "add_button": "Add Injury"
+        },
+        "health_condition": {
+            "title": "Do you have any health conditions?",
+            "subtitle": "This helps us customize your workouts safely",
+            "no_conditions": "No health conditions to report",
+            "add_condition": "Add a health condition",
+            "condition_name": "Condition name",
+            "condition_description": "Description (optional)",
+            "add_button": "Add Condition"
+        },
+        "completed": {
+            "processing": "Processing...",
+            "success_title": "You're all set!",
+            "success_subtitle": "Thank you for providing your information. We're excited to start your fitness journey!",
+            "error_title": "Something went wrong",
+            "error_subtitle": "We couldn't complete your registration. Please try again.",
+            "preparing": "Preparing your profile",
+            "preparing_subtitle": "Just a moment while we prepare everything...",
+            "profile_summary": "Your Profile Summary",
+            "name_label": "Name",
+            "gender_label": "Gender",
+            "age_label": "Age",
+            "height_label": "Height",
+            "weight_label": "Weight",
+            "goals_label": "Goals",
+            "activity_label": "Activity",
+            "retry_button": "Retry"
+        }
     }
 }

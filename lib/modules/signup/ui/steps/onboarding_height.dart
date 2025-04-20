@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,21 +31,31 @@ class _OnboardingHeightState extends ConsumerState<OnboardingHeight> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 40),
         Text(
-          "What's your height?",
+          t.signup_onboarding.height.title,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,
           ),
           textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 8),
+        Text(
+          t.signup_onboarding.height.subtitle,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.onBackground.withOpacity(0.7),
+          ),
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 40),
         Text(
-          "${_height.toInt()} cm",
+          "${_height.toInt()} ${t.signup_onboarding.height.cm}",
           style: context.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,

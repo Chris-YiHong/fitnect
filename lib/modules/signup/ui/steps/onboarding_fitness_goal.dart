@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/model/onboarding_form_model.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,14 @@ class OnboardingFitnessGoal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGoals =
         ref.watch(onboardingFormNotifierProvider).fitnessGoals;
+    final t = Translations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 40),
         Text(
-          "What are your fitness goals?",
+          t.signup_onboarding.fitness_goal.title,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onBackground,
@@ -26,7 +28,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          "Select all that apply",
+          t.signup_onboarding.fitness_goal.subtitle,
           style: context.textTheme.bodyLarge?.copyWith(
             color: context.colors.onBackground.withOpacity(0.7),
           ),
@@ -35,7 +37,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 24),
         _buildGoalOption(
           context,
-          'Lose Weight',
+          t.signup_onboarding.fitness_goal.lose_weight,
           FitnessGoal.loseWeight,
           selectedGoals,
           ref,
@@ -43,7 +45,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGoalOption(
           context,
-          'Gain Muscle',
+          t.signup_onboarding.fitness_goal.gain_muscle,
           FitnessGoal.gainMuscle,
           selectedGoals,
           ref,
@@ -51,7 +53,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGoalOption(
           context,
-          'Improve Fitness',
+          t.signup_onboarding.fitness_goal.improve_fitness,
           FitnessGoal.improveFitness,
           selectedGoals,
           ref,
@@ -59,7 +61,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGoalOption(
           context,
-          'Increase Endurance',
+          t.signup_onboarding.fitness_goal.increase_endurance,
           FitnessGoal.increaseEndurance,
           selectedGoals,
           ref,
@@ -67,7 +69,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGoalOption(
           context,
-          'Improve Flexibility',
+          t.signup_onboarding.fitness_goal.improve_flexibility,
           FitnessGoal.improveFlexibility,
           selectedGoals,
           ref,
@@ -75,7 +77,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGoalOption(
           context,
-          'Other',
+          t.signup_onboarding.fitness_goal.other,
           FitnessGoal.other,
           selectedGoals,
           ref,

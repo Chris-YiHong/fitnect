@@ -1,4 +1,5 @@
 import 'package:fitnect/core/theme/extensions/theme_extension.dart';
+import 'package:fitnect/i18n/translations.g.dart';
 import 'package:fitnect/modules/signup/domain/provider/onboarding_form_provider.dart';
 import 'package:fitnect/modules/signup/ui/steps/onboarding_activity.dart';
 import 'package:fitnect/modules/signup/ui/steps/onboarding_birthday.dart';
@@ -15,10 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class OnboardingLayout extends ConsumerWidget {
+class SignUpOnboardingPage extends ConsumerWidget {
   final String step;
 
-  const OnboardingLayout({super.key, required this.step});
+  const SignUpOnboardingPage({super.key, required this.step});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +28,22 @@ class OnboardingLayout extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.colors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading:
+            step != 'name'
+                ? IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: context.colors.onBackground,
+                  ),
+                  onPressed: () => _navigateToPreviousStep(context),
+                )
+                : null,
+      ),
       body: SafeArea(
+        top: step == 'name',
         child: Column(
           children: [
             _buildHeader(context),
@@ -41,18 +57,15 @@ class OnboardingLayout extends ConsumerWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final t = Translations.of(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Row(
         children: [
-          if (step != 'name')
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => _navigateToPreviousStep(context),
-            ),
           Expanded(
             child: Text(
-              'Welcome to FitNect',
+              t.signup_onboarding.header.title,
               textAlign: TextAlign.center,
               style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -60,7 +73,6 @@ class OnboardingLayout extends ConsumerWidget {
               ),
             ),
           ),
-          if (step != 'name') const SizedBox(width: 48),
         ],
       ),
     );
@@ -72,7 +84,7 @@ class OnboardingLayout extends ConsumerWidget {
       child: LinearProgressIndicator(
         value: progress,
         backgroundColor: context.colors.surfaceVariant,
-        color: context.colors.accent,
+        color: context.colors.primary,
         minHeight: 8,
         borderRadius: BorderRadius.circular(4),
       ),
@@ -80,10 +92,14 @@ class OnboardingLayout extends ConsumerWidget {
   }
 
   Widget _buildBottomButton(BuildContext context, WidgetRef ref) {
+    final t = Translations.of(context);
     final notifier = ref.read(onboardingFormNotifierProvider.notifier);
     final model = ref.watch(onboardingFormNotifierProvider);
     final isLastStep = step == 'completed';
-    final buttonText = isLastStep ? 'Get Started' : 'Next';
+    final buttonText =
+        isLastStep
+            ? t.signup_onboarding.navigation.get_started
+            : t.signup_onboarding.navigation.next;
     final isValid = notifier.isStepValid(step);
 
     return Padding(
@@ -178,7 +194,14 @@ class _OnboardingContent extends StatelessWidget {
       case 'completed':
         return const OnboardingCompleted();
       default:
-        return Center(child: Text('Unknown step: $step'));
+        return Center(
+          child: Builder(
+            builder: (context) {
+              final t = Translations.of(context);
+              return Text(t.signup_onboarding.unknown_step(step: step));
+            },
+          ),
+        );
     }
   }
 }
