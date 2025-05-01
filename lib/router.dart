@@ -7,6 +7,7 @@ import 'package:fitnect/modules/authentication/ui/phone_auth_page.dart';
 import 'package:fitnect/modules/authentication/ui/recover_password_page.dart';
 import 'package:fitnect/modules/authentication/ui/signin_page.dart';
 import 'package:fitnect/modules/authentication/ui/signup_page.dart';
+import 'package:fitnect/modules/signup/ui/signup_onboarding_page.dart';
 
 import 'package:fitnect/modules/onboarding/ui/onboarding_page.dart';
 import 'package:fitnect/modules/subscription/ui/premium_page.dart';
@@ -40,12 +41,8 @@ GoRouter generateRouter({
     routes: [
       GoRoute(
         name: 'home',
-        path: '/home',
-        builder:
-            (context, state) => const UserInfosGuard(
-              fallbackRoute: '/onboarding',
-              child: BottomMenu(),
-            ),
+        path: '/',
+        builder: (context, state) => const BottomMenu(),
       ),
       GoRoute(
         name: 'onboarding',
@@ -58,8 +55,17 @@ GoRouter generateRouter({
         builder: (context, state) => const SignupPage(),
       ),
       GoRoute(
+        name: 'signupOnboarding',
+        path: '/signup/onboarding/:step',
+        builder: (context, state) {
+          final stepName = state.pathParameters['step']!;
+          final step = OnboardingStep.fromRouteName(stepName);
+          return SignUpOnboardingPage(step: step);
+        },
+      ),
+      GoRoute(
         name: 'signin',
-        path: '/',
+        path: '/signin',
         builder: (context, state) => const SigninPage(),
       ),
       GoRoute(

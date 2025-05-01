@@ -42,18 +42,16 @@ class _OnboardingNameState extends ConsumerState<OnboardingName> {
     final t = Translations.of(context);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 40),
         Text(
           t.signup_onboarding.name.title,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
             color: context.colors.onBackground,
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         _buildNameInput(context),
       ],
     );
@@ -62,34 +60,24 @@ class _OnboardingNameState extends ConsumerState<OnboardingName> {
   Widget _buildNameInput(BuildContext context) {
     final t = Translations.of(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: context.colors.primary, width: 2),
+    return TextField(
+      controller: _nameController,
+      focusNode: _focusNode,
+      textCapitalization: TextCapitalization.words,
+      style: context.textTheme.bodyLarge?.copyWith(
+        color: context.colors.onSurface,
       ),
-      child: TextField(
-        controller: _nameController,
-        focusNode: _focusNode,
-        textCapitalization: TextCapitalization.words,
-        style: context.textTheme.bodyLarge?.copyWith(
-          color: context.colors.onSurface,
+      cursorColor: context.colors.accent,
+      decoration: InputDecoration(
+        hintText: t.signup_onboarding.name.placeholder,
+        hintStyle: context.textTheme.bodyMedium?.copyWith(
+          color: context.colors.grey1,
         ),
-        decoration: InputDecoration(
-          hintText: t.signup_onboarding.name.placeholder,
-          hintStyle: context.textTheme.bodyLarge?.copyWith(
-            color: context.colors.onSurface.withOpacity(0.5),
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-        ),
-        onChanged: (value) {
-          ref.read(onboardingFormNotifierProvider.notifier).updateName(value);
-        },
+        border: InputBorder.none,
       ),
+      onChanged: (value) {
+        ref.read(onboardingFormNotifierProvider.notifier).updateName(value);
+      },
     );
   }
 }

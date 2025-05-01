@@ -41,22 +41,6 @@ class OnboardingGender extends ConsumerWidget {
           selectedGender,
           ref,
         ),
-        const SizedBox(height: 20),
-        _buildGenderOption(
-          context,
-          t.signup_onboarding.gender.other,
-          Gender.other,
-          selectedGender,
-          ref,
-        ),
-        const SizedBox(height: 20),
-        _buildGenderOption(
-          context,
-          t.signup_onboarding.gender.prefer_not_to_say,
-          Gender.preferNotToSay,
-          selectedGender,
-          ref,
-        ),
       ],
     );
   }
@@ -77,11 +61,11 @@ class OnboardingGender extends ConsumerWidget {
       borderRadius: BorderRadius.circular(10),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? context.colors.primary
+                  ? context.colors.accent
                   : context.colors.surfaceVariant,
           borderRadius: BorderRadius.circular(10),
         ),
@@ -98,13 +82,13 @@ class OnboardingGender extends ConsumerWidget {
               ),
             ),
             Container(
-              width: 24,
-              height: 24,
+              width: 30,
+              height: 30,
               margin: const EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color:
-                    isSelected ? context.colors.onPrimary : Colors.transparent,
+                    isSelected ? context.colors.onSurface : Colors.transparent,
                 border:
                     isSelected
                         ? null

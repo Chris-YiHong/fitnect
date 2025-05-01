@@ -163,19 +163,19 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
   }) => InputDecorationTheme(
     fillColor: colors.surface,
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: colors.grey1),
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide.none, //
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: colors.primary),
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide(color: colors.accent),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
       borderSide: BorderSide(color: colors.error, width: 2),
     ),
     filled: true,
-    hintStyle: textTheme.body2.copyWith(color: colors.grey2),
+    hintStyle: textTheme.body2.copyWith(color: colors.grey1),
     labelStyle: textTheme.body2.copyWith(color: colors.grey2),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),

@@ -370,8 +370,8 @@ class TranslationsSignupOnboardingNameEn {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => 'What\'s your name?';
-	String get placeholder => 'Enter your name';
+	String get title => 'What should we call you?';
+	String get placeholder => 'Enter a nickname';
 }
 
 // Path: signup_onboarding.gender
@@ -639,8 +639,8 @@ extension on Translations {
 			case 'signup_onboarding.navigation.next': return 'Next';
 			case 'signup_onboarding.navigation.get_started': return 'Get Started';
 			case 'signup_onboarding.unknown_step': return ({required Object step}) => 'Unknown step: ${step}';
-			case 'signup_onboarding.name.title': return 'What\'s your name?';
-			case 'signup_onboarding.name.placeholder': return 'Enter your name';
+			case 'signup_onboarding.name.title': return 'What should we call you?';
+			case 'signup_onboarding.name.placeholder': return 'Enter a nickname';
 			case 'signup_onboarding.gender.title': return 'What\'s your Gender?';
 			case 'signup_onboarding.gender.male': return 'Male';
 			case 'signup_onboarding.gender.female': return 'Female';

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:fitnect/modules/signup/ui/signup_onboarding_page.dart';
 
 part 'onboarding_form_model.freezed.dart';
 part 'onboarding_form_model.g.dart';
@@ -68,30 +69,28 @@ abstract class OnboardingFormModel with _$OnboardingFormModel {
   bool get isActivityLevelValid => activityLevel != null;
   bool get isDietValid => diet != null && diet!.isNotEmpty;
 
-  bool isStepValid(String step) {
-    switch (step) {
-      case 'name':
-        return isNameValid;
-      case 'gender':
-        return isGenderValid;
-      case 'birthday':
-        return isBirthDateValid;
-      case 'height':
-        return isHeightValid;
-      case 'weight':
-        return isWeightValid;
-      case 'fitness-goal':
-        return isFitnessGoalsValid;
-      case 'activity':
-        return isActivityLevelValid;
-      case 'diet':
-        return isDietValid;
-      case 'injuries-history':
-      case 'health-condition':
-      case 'completed':
-        return true;
-      default:
-        return false;
+  bool isStepValid(String stepName) {
+    try {
+      final step = OnboardingStep.fromRouteName(stepName);
+      return _isStepEnumValid(step);
+    } catch (_) {
+      return false;
     }
+  }
+
+  bool _isStepEnumValid(OnboardingStep step) {
+    return switch (step) {
+      OnboardingStep.name => isNameValid,
+      OnboardingStep.gender => isGenderValid,
+      OnboardingStep.birthday => isBirthDateValid,
+      OnboardingStep.height => isHeightValid,
+      OnboardingStep.weight => isWeightValid,
+      OnboardingStep.fitnessGoal => isFitnessGoalsValid,
+      OnboardingStep.activity => isActivityLevelValid,
+      OnboardingStep.diet => isDietValid,
+      OnboardingStep.injuriesHistory => true,
+      OnboardingStep.healthCondition => true,
+      OnboardingStep.completed => true,
+    };
   }
 }

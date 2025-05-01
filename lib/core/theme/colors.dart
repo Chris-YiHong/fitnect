@@ -23,6 +23,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
   final Color secondary;
   final Color neutral;
   final Color neutralGrey;
+  final Color neutralBackground;
 
   const FitNectColors({
     required this.primary,
@@ -41,6 +42,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     this.secondary = Colors.transparent,
     this.neutral = Colors.transparent,
     this.neutralGrey = Colors.transparent,
+    this.neutralBackground = Colors.transparent,
   });
 
   factory FitNectColors.light() => const FitNectColors(
@@ -60,6 +62,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     grey1: Color(0xFFBEC1C3),
     grey2: Color(0xFF7D8488),
     grey3: Color(0xFF263238),
+    neutralBackground: Color(0xFF111214), // Dark grey #111214
   );
 
   factory FitNectColors.dark() => const FitNectColors(
@@ -82,6 +85,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     secondary: Color(0xFF1f1b2e), // Dark purple-black #1f1b2e
     neutral: Color(0xFFffffff), // White #ffffff
     neutralGrey: Color(0xFF626262), // Grey #626262
+    neutralBackground: Color(0xFF111214), // Dark grey #111214
   );
 
   @override
@@ -102,6 +106,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
     Color? secondary,
     Color? neutral,
     Color? neutralGrey,
+    Color? neutralBackground,
   }) {
     return FitNectColors(
       primary: primary ?? this.primary,
@@ -120,6 +125,7 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       secondary: secondary ?? this.secondary,
       neutral: neutral ?? this.neutral,
       neutralGrey: neutralGrey ?? this.neutralGrey,
+      neutralBackground: neutralBackground ?? this.neutralBackground,
     );
   }
 
@@ -148,6 +154,8 @@ class FitNectColors extends ThemeExtension<FitNectColors> {
       secondary: Color.lerp(secondary, other.secondary, t)!,
       neutral: Color.lerp(neutral, other.neutral, t)!,
       neutralGrey: Color.lerp(neutralGrey, other.neutralGrey, t)!,
+      neutralBackground:
+          Color.lerp(neutralBackground, other.neutralBackground, t)!,
     );
   }
 }

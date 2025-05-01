@@ -137,8 +137,8 @@
         },
         "unknown_step": "Unknown step: $step",
         "name": {
-            "title": "What's your name?",
-            "placeholder": "Enter your name"
+            "title": "What should we call you?",
+            "placeholder": "Enter a nickname"
         },
         "gender": {
             "title": "What's your Gender?",

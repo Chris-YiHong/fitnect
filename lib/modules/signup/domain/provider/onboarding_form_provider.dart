@@ -1,20 +1,21 @@
 import 'package:fitnect/modules/signup/domain/model/onboarding_form_model.dart';
+import 'package:fitnect/modules/signup/ui/signup_onboarding_page.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_form_provider.g.dart';
 
-const List<String> onboardingSteps = [
-  'name',
-  'gender',
-  'birthday',
-  'height',
-  'weight',
-  'fitness-goal',
-  'activity',
-  'diet',
-  'injuries-history',
-  'health-condition',
-  'completed',
+const List<OnboardingStep> onboardingSteps = [
+  OnboardingStep.name,
+  OnboardingStep.gender,
+  OnboardingStep.birthday,
+  OnboardingStep.height,
+  OnboardingStep.weight,
+  OnboardingStep.fitnessGoal,
+  OnboardingStep.activity,
+  OnboardingStep.diet,
+  OnboardingStep.injuriesHistory,
+  OnboardingStep.healthCondition,
+  OnboardingStep.completed,
 ];
 
 @Riverpod(keepAlive: true)
@@ -93,23 +94,29 @@ class OnboardingFormNotifier extends _$OnboardingFormNotifier {
   }
 
   String? getNextStep(String currentStep) {
-    final currentIndex = onboardingSteps.indexOf(currentStep);
+    final currentIndex = onboardingSteps.indexWhere(
+      (step) => step.routeName == currentStep,
+    );
     if (currentIndex < 0 || currentIndex >= onboardingSteps.length - 1) {
       return null;
     }
-    return onboardingSteps[currentIndex + 1];
+    return onboardingSteps[currentIndex + 1].routeName;
   }
 
   String? getPreviousStep(String currentStep) {
-    final currentIndex = onboardingSteps.indexOf(currentStep);
+    final currentIndex = onboardingSteps.indexWhere(
+      (step) => step.routeName == currentStep,
+    );
     if (currentIndex <= 0) {
       return null;
     }
-    return onboardingSteps[currentIndex - 1];
+    return onboardingSteps[currentIndex - 1].routeName;
   }
 
   double getProgress(String currentStep) {
-    final currentIndex = onboardingSteps.indexOf(currentStep);
+    final currentIndex = onboardingSteps.indexWhere(
+      (step) => step.routeName == currentStep,
+    );
     if (currentIndex < 0) return 0.0;
     // Do not count 'completed' step in progress calculation
     return (currentIndex + 1) / (onboardingSteps.length - 1);
