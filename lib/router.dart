@@ -41,7 +41,7 @@ GoRouter generateRouter({
     routes: [
       GoRoute(
         name: 'home',
-        path: '/',
+        path: '/home',
         builder: (context, state) => const BottomMenu(),
       ),
       GoRoute(
@@ -65,7 +65,7 @@ GoRouter generateRouter({
       ),
       GoRoute(
         name: 'signin',
-        path: '/signin',
+        path: '/',
         builder: (context, state) => const SigninPage(),
       ),
       GoRoute(

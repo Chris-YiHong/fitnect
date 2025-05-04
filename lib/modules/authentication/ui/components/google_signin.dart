@@ -16,7 +16,7 @@ class GoogleSignInComponent extends ConsumerWidget {
       () => ref
           .read(signinStateProvider.notifier)
           .signinWithGoogle()
-          .then((value) => context.pushReplacement('/'))
+          .then((value) => context.pushReplacement('/home'))
           .catchError((err) {
             showErrorToast(
               context: context,
