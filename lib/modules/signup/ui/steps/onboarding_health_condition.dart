@@ -144,7 +144,7 @@ class _OnboardingHealthConditionState
       decoration: BoxDecoration(
         color: context.colors.surfaceVariant.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.colors.primary.withOpacity(0.3)),
+        border: Border.all(color: context.colors.accent.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +187,7 @@ class _OnboardingHealthConditionState
             child: ElevatedButton(
               onPressed: _addHealthCondition,
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.colors.primary,
+                backgroundColor: context.colors.accent,
                 foregroundColor: context.colors.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -222,7 +222,7 @@ class _OnboardingHealthConditionState
               child: Text(
                 "No health conditions to report",
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.primary,
+                  color: context.colors.accent,
                 ),
               ),
             ),

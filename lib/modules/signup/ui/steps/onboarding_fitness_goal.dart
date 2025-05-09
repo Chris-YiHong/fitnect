@@ -14,75 +14,80 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         ref.watch(onboardingFormNotifierProvider).fitnessGoals;
     final t = Translations.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 40),
-        Text(
-          t.signup_onboarding.fitness_goal.title,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onBackground,
-          ),
-          textAlign: TextAlign.center,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              t.signup_onboarding.fitness_goal.title,
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.signup_onboarding.fitness_goal.subtitle,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onBackground.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.lose_weight,
+              FitnessGoal.loseWeight,
+              selectedGoals,
+              ref,
+            ),
+            const SizedBox(height: 12),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.gain_muscle,
+              FitnessGoal.gainMuscle,
+              selectedGoals,
+              ref,
+            ),
+            const SizedBox(height: 12),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.improve_fitness,
+              FitnessGoal.improveFitness,
+              selectedGoals,
+              ref,
+            ),
+            const SizedBox(height: 12),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.increase_endurance,
+              FitnessGoal.increaseEndurance,
+              selectedGoals,
+              ref,
+            ),
+            const SizedBox(height: 12),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.improve_flexibility,
+              FitnessGoal.improveFlexibility,
+              selectedGoals,
+              ref,
+            ),
+            const SizedBox(height: 12),
+            _buildGoalOption(
+              context,
+              t.signup_onboarding.fitness_goal.other,
+              FitnessGoal.other,
+              selectedGoals,
+              ref,
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          t.signup_onboarding.fitness_goal.subtitle,
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: context.colors.onBackground.withOpacity(0.7),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.lose_weight,
-          FitnessGoal.loseWeight,
-          selectedGoals,
-          ref,
-        ),
-        const SizedBox(height: 12),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.gain_muscle,
-          FitnessGoal.gainMuscle,
-          selectedGoals,
-          ref,
-        ),
-        const SizedBox(height: 12),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.improve_fitness,
-          FitnessGoal.improveFitness,
-          selectedGoals,
-          ref,
-        ),
-        const SizedBox(height: 12),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.increase_endurance,
-          FitnessGoal.increaseEndurance,
-          selectedGoals,
-          ref,
-        ),
-        const SizedBox(height: 12),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.improve_flexibility,
-          FitnessGoal.improveFlexibility,
-          selectedGoals,
-          ref,
-        ),
-        const SizedBox(height: 12),
-        _buildGoalOption(
-          context,
-          t.signup_onboarding.fitness_goal.other,
-          FitnessGoal.other,
-          selectedGoals,
-          ref,
-        ),
-      ],
+      ),
     );
   }
 
@@ -108,11 +113,11 @@ class OnboardingFitnessGoal extends ConsumerWidget {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? context.colors.primary.withOpacity(0.2)
+                  ? context.colors.accent.withOpacity(0.2)
                   : context.colors.surfaceVariant,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? context.colors.primary : Colors.transparent,
+            color: isSelected ? context.colors.accent : Colors.transparent,
             width: 2,
           ),
         ),
@@ -131,7 +136,7 @@ class OnboardingFitnessGoal extends ConsumerWidget {
               isSelected ? Icons.check_circle : Icons.circle_outlined,
               color:
                   isSelected
-                      ? context.colors.primary
+                      ? context.colors.accent
                       : context.colors.onSurfaceVariant,
             ),
           ],

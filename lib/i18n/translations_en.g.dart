@@ -47,6 +47,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsOnboardingEn onboarding = TranslationsOnboardingEn.internal(_root);
 	late final TranslationsFeatureRequestsEn feature_requests = TranslationsFeatureRequestsEn.internal(_root);
 	late final TranslationsSignupOnboardingEn signup_onboarding = TranslationsSignupOnboardingEn.internal(_root);
+	late final TranslationsAuthEn auth = TranslationsAuthEn.internal(_root);
 }
 
 // Path: home
@@ -178,6 +179,16 @@ class TranslationsSignupOnboardingEn {
 	late final TranslationsSignupOnboardingInjuriesHistoryEn injuries_history = TranslationsSignupOnboardingInjuriesHistoryEn.internal(_root);
 	late final TranslationsSignupOnboardingHealthConditionEn health_condition = TranslationsSignupOnboardingHealthConditionEn.internal(_root);
 	late final TranslationsSignupOnboardingCompletedEn completed = TranslationsSignupOnboardingCompletedEn.internal(_root);
+}
+
+// Path: auth
+class TranslationsAuthEn {
+	TranslationsAuthEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsAuthSigninHeaderEn signin_header = TranslationsAuthSigninHeaderEn.internal(_root);
 }
 
 // Path: paywallWithSwitch.withTrial
@@ -349,7 +360,7 @@ class TranslationsSignupOnboardingHeaderEn {
 
 	// Translations
 	String get title => 'Welcome to FitNect';
-	String get subtitle => 'Before we begin, let’s get to know you better!';
+	String get subtitle => 'Before we begin, let\'s get to know you better!';
 }
 
 // Path: signup_onboarding.navigation
@@ -537,6 +548,17 @@ class TranslationsSignupOnboardingCompletedEn {
 	String get retry_button => 'Retry';
 }
 
+// Path: auth.signin_header
+class TranslationsAuthSigninHeaderEn {
+	TranslationsAuthSigninHeaderEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get welcome_back => 'Welcome back!';
+	String get sign_in_to => 'Sign in to FitNect';
+}
+
 // Path: feature_requests.add_feature.toast_success
 class TranslationsFeatureRequestsAddFeatureToastSuccessEn {
 	TranslationsFeatureRequestsAddFeatureToastSuccessEn.internal(this._root);
@@ -635,7 +657,7 @@ extension on Translations {
 			case 'feature_requests.add_feature.toast_success.title': return 'Thank you!';
 			case 'feature_requests.add_feature.toast_success.description': return 'We will review your suggestion';
 			case 'signup_onboarding.header.title': return 'Welcome to FitNect';
-			case 'signup_onboarding.header.subtitle': return 'Before we begin, let’s get to know you better!';
+			case 'signup_onboarding.header.subtitle': return 'Before we begin, let\'s get to know you better!';
 			case 'signup_onboarding.navigation.next': return 'Next';
 			case 'signup_onboarding.navigation.get_started': return 'Get Started';
 			case 'signup_onboarding.unknown_step': return ({required Object step}) => 'Unknown step: ${step}';
@@ -714,6 +736,8 @@ extension on Translations {
 			case 'signup_onboarding.completed.goals_label': return 'Goals';
 			case 'signup_onboarding.completed.activity_label': return 'Activity';
 			case 'signup_onboarding.completed.retry_button': return 'Retry';
+			case 'auth.signin_header.welcome_back': return 'Welcome back!';
+			case 'auth.signin_header.sign_in_to': return 'Sign in to FitNect';
 			default: return null;
 		}
 	}

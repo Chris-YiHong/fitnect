@@ -92,13 +92,11 @@ class SignUpOnboardingPage extends ConsumerWidget {
         top: step == OnboardingStep.name,
         child: Column(
           children: [
-            const Spacer(),
             _buildHeader(context),
             const SizedBox(height: 16),
             _buildProgressIndicator(context, progress),
-            const Spacer(flex: 2),
-            _OnboardingContent(step: step),
-            const Spacer(flex: 4),
+            const SizedBox(height: 24),
+            Expanded(child: _OnboardingContent(step: step)),
             _buildBottomButton(context, ref),
           ],
         ),

@@ -14,72 +14,77 @@ class OnboardingActivity extends ConsumerWidget {
         ref.watch(onboardingFormNotifierProvider).activityLevel;
     final t = Translations.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 40),
-        Text(
-          t.signup_onboarding.activity.title,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onBackground,
-          ),
-          textAlign: TextAlign.center,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              t.signup_onboarding.activity.title,
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.signup_onboarding.activity.subtitle,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onBackground.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            _buildActivityOption(
+              context,
+              t.signup_onboarding.activity.sedentary,
+              t.signup_onboarding.activity.sedentary_description,
+              ActivityLevel.sedentary,
+              selectedActivity,
+              ref,
+            ),
+            const SizedBox(height: 16),
+            _buildActivityOption(
+              context,
+              t.signup_onboarding.activity.light,
+              t.signup_onboarding.activity.light_description,
+              ActivityLevel.light,
+              selectedActivity,
+              ref,
+            ),
+            const SizedBox(height: 16),
+            _buildActivityOption(
+              context,
+              t.signup_onboarding.activity.moderate,
+              t.signup_onboarding.activity.moderate_description,
+              ActivityLevel.moderate,
+              selectedActivity,
+              ref,
+            ),
+            const SizedBox(height: 16),
+            _buildActivityOption(
+              context,
+              t.signup_onboarding.activity.active,
+              t.signup_onboarding.activity.active_description,
+              ActivityLevel.active,
+              selectedActivity,
+              ref,
+            ),
+            const SizedBox(height: 16),
+            _buildActivityOption(
+              context,
+              t.signup_onboarding.activity.very_active,
+              t.signup_onboarding.activity.very_active_description,
+              ActivityLevel.veryActive,
+              selectedActivity,
+              ref,
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          t.signup_onboarding.activity.subtitle,
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: context.colors.onBackground.withOpacity(0.7),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 40),
-        _buildActivityOption(
-          context,
-          t.signup_onboarding.activity.sedentary,
-          t.signup_onboarding.activity.sedentary_description,
-          ActivityLevel.sedentary,
-          selectedActivity,
-          ref,
-        ),
-        const SizedBox(height: 16),
-        _buildActivityOption(
-          context,
-          t.signup_onboarding.activity.light,
-          t.signup_onboarding.activity.light_description,
-          ActivityLevel.light,
-          selectedActivity,
-          ref,
-        ),
-        const SizedBox(height: 16),
-        _buildActivityOption(
-          context,
-          t.signup_onboarding.activity.moderate,
-          t.signup_onboarding.activity.moderate_description,
-          ActivityLevel.moderate,
-          selectedActivity,
-          ref,
-        ),
-        const SizedBox(height: 16),
-        _buildActivityOption(
-          context,
-          t.signup_onboarding.activity.active,
-          t.signup_onboarding.activity.active_description,
-          ActivityLevel.active,
-          selectedActivity,
-          ref,
-        ),
-        const SizedBox(height: 16),
-        _buildActivityOption(
-          context,
-          t.signup_onboarding.activity.very_active,
-          t.signup_onboarding.activity.very_active_description,
-          ActivityLevel.veryActive,
-          selectedActivity,
-          ref,
-        ),
-      ],
+      ),
     );
   }
 
@@ -106,11 +111,11 @@ class OnboardingActivity extends ConsumerWidget {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? context.colors.primary.withOpacity(0.2)
+                  ? context.colors.accent.withOpacity(0.2)
                   : context.colors.surfaceVariant,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? context.colors.primary : Colors.transparent,
+            color: isSelected ? context.colors.accent : Colors.transparent,
             width: 2,
           ),
         ),
@@ -148,7 +153,7 @@ class OnboardingActivity extends ConsumerWidget {
                       .updateActivityLevel(value);
                 }
               },
-              activeColor: context.colors.primary,
+              activeColor: context.colors.accent,
             ),
           ],
         ),

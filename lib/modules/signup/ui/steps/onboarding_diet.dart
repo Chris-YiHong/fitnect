@@ -53,40 +53,45 @@ class _OnboardingDietState extends ConsumerState<OnboardingDiet> {
       t.signup_onboarding.diet.suggestion_5,
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 40),
-        Text(
-          t.signup_onboarding.diet.title,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onBackground,
-          ),
-          textAlign: TextAlign.center,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              t.signup_onboarding.diet.title,
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.signup_onboarding.diet.subtitle,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onBackground.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            _buildDietInput(context),
+            const SizedBox(height: 16),
+            Text(
+              t.signup_onboarding.diet.suggestions_title,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            _buildDietSuggestions(),
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          t.signup_onboarding.diet.subtitle,
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: context.colors.onBackground.withOpacity(0.7),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        _buildDietInput(context),
-        const SizedBox(height: 16),
-        Text(
-          t.signup_onboarding.diet.suggestions_title,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onBackground,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        _buildDietSuggestions(),
-      ],
+      ),
     );
   }
 
@@ -97,7 +102,7 @@ class _OnboardingDietState extends ConsumerState<OnboardingDiet> {
       decoration: BoxDecoration(
         color: context.colors.surfaceVariant,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: context.colors.primary, width: 2),
+        border: Border.all(color: context.colors.accent, width: 2),
       ),
       child: TextField(
         controller: _dietController,
@@ -140,9 +145,7 @@ class _OnboardingDietState extends ConsumerState<OnboardingDiet> {
               child: Chip(
                 label: Text(diet),
                 backgroundColor: context.colors.surfaceVariant,
-                side: BorderSide(
-                  color: context.colors.primary.withOpacity(0.3),
-                ),
+                side: BorderSide(color: context.colors.accent.withOpacity(0.3)),
               ),
             );
           }).toList(),

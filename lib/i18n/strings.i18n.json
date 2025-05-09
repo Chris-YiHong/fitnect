@@ -129,7 +129,7 @@
     "signup_onboarding": {
         "header": {
             "title": "Welcome to FitNect",
-            "subtitle": "Before we begin, let’s get to know you better!"
+            "subtitle": "Before we begin, let's get to know you better!"
         },
         "navigation": {
             "next": "Next",
@@ -232,6 +232,12 @@
             "goals_label": "Goals",
             "activity_label": "Activity",
             "retry_button": "Retry"
+        }
+    },
+    "auth": {
+        "signin_header": {
+            "welcome_back": "Welcome back!",
+            "sign_in_to": "Sign in to FitNect"
         }
     }
 }

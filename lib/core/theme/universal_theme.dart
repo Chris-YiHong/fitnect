@@ -71,7 +71,7 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
           foregroundColor: colors.onSurface,
           elevation: 0,
         ),
-        scaffoldBackgroundColor: colors.background,
+        scaffoldBackgroundColor: colors.neutralBackground,
         cardTheme: CardTheme(
           color: colors.surface,
           elevation: 1,
@@ -127,7 +127,7 @@ class UniversalThemeFactory extends FitNectThemeDataFactory {
     style: ElevatedButton.styleFrom(
       minimumSize: const Size(200, 48),
       foregroundColor: colors.onPrimary,
-      backgroundColor: colors.primary,
+      backgroundColor: colors.accent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       textStyle: textTheme.buttonMainpage,
       elevation: 0,

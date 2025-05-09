@@ -16,7 +16,12 @@ class GoogleSignInComponent extends ConsumerWidget {
       () => ref
           .read(signinStateProvider.notifier)
           .signinWithGoogle()
-          .then((value) => context.pushReplacement('/home'))
+          .then(
+            (value) => context.goNamed(
+              'signupOnboarding',
+              pathParameters: {'step': 'name'},
+            ),
+          )
           .catchError((err) {
             showErrorToast(
               context: context,
@@ -45,7 +50,12 @@ class GooglePlayGamesSignInComponent extends ConsumerWidget {
               text: 'Cannot signin with Google play',
             ),
           )
-          .then((value) => context.pushReplacementNamed('/signup')),
+          .then(
+            (value) => context.goNamed(
+              'signupOnboarding',
+              pathParameters: {'step': 'name'},
+            ),
+          ),
     );
   }
 }

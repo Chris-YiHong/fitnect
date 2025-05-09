@@ -70,9 +70,9 @@ class _OnboardingHeightState extends ConsumerState<OnboardingHeight> {
   Widget _buildHeightSlider() {
     return SliderTheme(
       data: SliderThemeData(
-        activeTrackColor: context.colors.primary,
+        activeTrackColor: context.colors.accent,
         inactiveTrackColor: context.colors.surfaceVariant,
-        thumbColor: context.colors.primary,
+        thumbColor: context.colors.accent,
         trackHeight: 8,
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
       ),

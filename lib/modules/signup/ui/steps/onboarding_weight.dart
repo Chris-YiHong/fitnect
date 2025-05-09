@@ -70,9 +70,9 @@ class _OnboardingWeightState extends ConsumerState<OnboardingWeight> {
   Widget _buildWeightSlider() {
     return SliderTheme(
       data: SliderThemeData(
-        activeTrackColor: context.colors.primary,
+        activeTrackColor: context.colors.accent,
         inactiveTrackColor: context.colors.surfaceVariant,
-        thumbColor: context.colors.primary,
+        thumbColor: context.colors.accent,
         trackHeight: 8,
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
       ),

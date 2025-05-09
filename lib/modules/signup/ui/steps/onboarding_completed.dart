@@ -34,44 +34,46 @@ class _OnboardingCompletedState extends ConsumerState<OnboardingCompleted> {
     final t = Translations.of(context);
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 40),
-          if (submissionStatus == SubmissionStatus.submitting)
-            const CircularProgressIndicator()
-          else if (submissionStatus == SubmissionStatus.error)
-            _buildErrorState(context)
-          else
-            Icon(
-              Icons.check_circle_outline_rounded,
-              color: context.colors.primary,
-              size: 100,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            if (submissionStatus == SubmissionStatus.submitting)
+              const CircularProgressIndicator()
+            else if (submissionStatus == SubmissionStatus.error)
+              _buildErrorState(context)
+            else
+              Icon(
+                Icons.check_circle_outline_rounded,
+                color: context.colors.primary,
+                size: 100,
+              ),
+            const SizedBox(height: 24),
+            Text(
+              _getHeadlineText(submissionStatus, t),
+              style: context.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+              textAlign: TextAlign.center,
             ),
-          const SizedBox(height: 24),
-          Text(
-            _getHeadlineText(submissionStatus, t),
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onBackground,
+            const SizedBox(height: 16),
+            Text(
+              _getSubtitleText(submissionStatus, t),
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onBackground.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _getSubtitleText(submissionStatus, t),
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onBackground.withOpacity(0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          if (submissionStatus == SubmissionStatus.success)
-            _buildSummary(context, formData),
-          if (submissionStatus == SubmissionStatus.error)
-            _buildRetryButton(context),
-        ],
+            const SizedBox(height: 40),
+            if (submissionStatus == SubmissionStatus.success)
+              _buildSummary(context, formData),
+            if (submissionStatus == SubmissionStatus.error)
+              _buildRetryButton(context),
+          ],
+        ),
       ),
     );
   }

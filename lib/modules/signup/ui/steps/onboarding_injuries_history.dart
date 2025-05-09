@@ -137,7 +137,7 @@ class _OnboardingInjuriesHistoryState
       decoration: BoxDecoration(
         color: context.colors.surfaceVariant.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.colors.primary.withOpacity(0.3)),
+        border: Border.all(color: context.colors.accent.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +202,7 @@ class _OnboardingInjuriesHistoryState
             child: ElevatedButton(
               onPressed: _addInjury,
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.colors.primary,
+                backgroundColor: context.colors.accent,
                 foregroundColor: context.colors.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(

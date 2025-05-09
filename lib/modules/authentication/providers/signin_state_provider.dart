@@ -70,7 +70,7 @@ class SigninStateNotifier extends StateNotifier<SigninState> {
       await _authRepository.signinWithGoogle();
       // lets fake a delay to prevent spamming the signup button
       await Future.delayed(const Duration(milliseconds: 1500));
-      await _userStateNotifier.onSignin();
+      // await _userStateNotifier.onSignin();
     } catch (e, trace) {
       debugPrint("Error while signing up: $e, $trace");
       state = SigninState(email: state.email, password: state.password);
