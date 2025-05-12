@@ -3,6 +3,7 @@ import 'package:fitnect/core/data/api/analytics_api.dart';
 import 'package:fitnect/core/guards/authenticated_guard.dart';
 import 'package:fitnect/core/guards/user_info_guard.dart';
 import 'package:fitnect/core/widgets/page_not_found.dart';
+import 'package:fitnect/core/widgets/toast_demo.dart';
 import 'package:fitnect/modules/authentication/ui/phone_auth_page.dart';
 import 'package:fitnect/modules/authentication/ui/recover_password_page.dart';
 import 'package:fitnect/modules/authentication/ui/signin_page.dart';
@@ -83,6 +84,11 @@ GoRouter generateRouter({
         name: 'recover_password',
         path: '/recover_password',
         builder: (context, state) => const RecoverPasswordPage(),
+      ),
+      GoRoute(
+        name: 'toast-demo',
+        path: '/toast-demo',
+        builder: (context, state) => const ToastDemoPage(),
       ),
       GoRoute(
         name: '404',

@@ -1,4 +1,5 @@
 import 'package:fitnect/core/data/api/base_api_exceptions.dart';
+import 'package:fitnect/core/data/entities/auth_result.dart';
 import 'package:fitnect/core/data/entities/user_entity.dart';
 import 'package:fitnect/core/data/api/http_client.dart';
 import 'package:fitnect/modules/authentication/api/authentication_api_interface.dart';
@@ -91,7 +92,7 @@ class HttpAuthenticationApi implements AuthenticationApi {
   Future<void> signout() async {}
 
   @override
-  Future<Credentials> signinWithGoogle() async {
+  Future<AuthResult> signinWithGoogle() async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
@@ -112,15 +113,93 @@ class HttpAuthenticationApi implements AuthenticationApi {
 
       _logger.d('Google sign-in successful: ${loginResult.email}');
 
-      // In a real app with a backend, you would send this token to your server
-      // For now, we'll just create credentials using the Google account information
-      return Credentials(
-        id: loginResult.id, // Using the Google ID
-        token:
-            googleAuth.idToken ??
-            googleAuth.accessToken ??
-            'fake-token-${DateTime.now().millisecondsSinceEpoch}',
-      );
+      // Get the ID token to send to your backend
+      final idToken = googleAuth.idToken;
+      if (idToken == null) {
+        throw ApiError(code: 400, message: 'Failed to obtain Google ID token');
+      }
+
+      try {
+        // Development fallback for when there's no backend
+        if (kDebugMode && false) {
+          // Change to true to use fake auth during development
+          _logger.w('Using development mode authentication - no backend calls');
+          // Return fake credentials for development
+          return AuthResult(
+            credentials: Credentials(
+              id: loginResult.id,
+              token: 'fake-token-${DateTime.now().millisecondsSinceEpoch}',
+            ),
+            isNewUser: false, // Set to true to test onboarding flow
+            userEntity: UserEntity(
+              id: loginResult.id,
+              email: loginResult.email,
+              name: loginResult.displayName,
+              avatarPath: loginResult.photoUrl,
+              creationDate: DateTime.now(),
+              lastUpdateDate: DateTime.now(),
+              onboarded: false, // Set to false to test onboarding flow
+            ),
+          );
+        }
+
+        // Send the ID token to your backend for verification and authentication
+        final response = await _client.post(
+          '/auth/google',
+          data: {
+            'idToken': idToken,
+            'email': loginResult.email,
+            'name': loginResult.displayName,
+            'photoUrl': loginResult.photoUrl,
+          },
+        );
+
+        // Parse the response from your backend
+        final data = response.data as Map<String, dynamic>;
+
+        final credentials = Credentials(
+          id: data['id'] as String,
+          token: data['token'] as String,
+        );
+
+        // Check if this is a new user
+        final isNewUser = data['isNewUser'] as bool;
+
+        // Parse user entity if included in response
+        UserEntity? userEntity;
+        if (data.containsKey('user')) {
+          userEntity = UserEntity.fromJson(
+            data['user'] as Map<String, dynamic>,
+          );
+        }
+
+        return AuthResult(
+          credentials: credentials,
+          isNewUser: isNewUser,
+          userEntity: userEntity,
+        );
+      } on DioException catch (e) {
+        // Handle backend-specific errors
+        _logger.e('Backend authentication error: ${e.message}');
+
+        // Fallback for development when server is unreachable
+        if (kDebugMode &&
+            (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.receiveTimeout ||
+                e.type == DioExceptionType.connectionError)) {
+          _logger.w('Backend unreachable, using development fallback');
+          return AuthResult(
+            credentials: Credentials(
+              id: loginResult.id,
+              token: 'fake-token-${DateTime.now().millisecondsSinceEpoch}',
+            ),
+            isNewUser: true, // Change to test different flows
+            userEntity: null,
+          );
+        }
+
+        throw ApiError.fromDioException(e);
+      }
     } on PlatformException catch (e) {
       _logger.e('Google sign-in platform error: ${e.code} - ${e.message}');
 

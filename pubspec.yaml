@@ -75,6 +75,7 @@ dependencies:
   slang_flutter: ^4.7.0
   flutter_localizations:
     sdk: flutter
+  fluttertoast: ^8.2.12
 
 dev_dependencies:
   flutter_test:

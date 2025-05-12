@@ -1,3 +1,4 @@
+import 'package:fitnect/core/data/entities/auth_result.dart';
 import 'package:fitnect/core/states/user_state_notifier.dart';
 import 'package:fitnect/modules/authentication/providers/models/email.dart';
 import 'package:fitnect/modules/authentication/providers/models/password.dart';
@@ -61,18 +62,26 @@ class SigninStateNotifier extends StateNotifier<SigninState> {
     }
   }
 
-  Future<void> signinWithGoogle() async {
+  Future<AuthResult> signinWithGoogle() async {
     if (state is SignupStateSending) {
-      return;
+      return Future.error('Authentication already in progress');
     }
     try {
       state = SigninState.sending(email: state.email, password: state.password);
-      await _authRepository.signinWithGoogle();
+      final result = await _authRepository.signinWithGoogle();
+
+      // Load the user state from the backend
+      await _userStateNotifier.onSignin();
+
       // lets fake a delay to prevent spamming the signup button
-      await Future.delayed(const Duration(milliseconds: 1500));
-      // await _userStateNotifier.onSignin();
+      await Future.delayed(const Duration(milliseconds: 200));
+
+      // Return to normal state
+      state = SigninState(email: state.email, password: state.password);
+
+      return result;
     } catch (e, trace) {
-      debugPrint("Error while signing up: $e, $trace");
+      debugPrint("Error while signing in with Google: $e, $trace");
       state = SigninState(email: state.email, password: state.password);
       rethrow;
     }

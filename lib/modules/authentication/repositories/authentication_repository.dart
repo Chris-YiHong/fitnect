@@ -1,6 +1,7 @@
 import 'package:fitnect/core/data/api/base_api_exceptions.dart';
 import 'package:fitnect/core/data/api/http_client.dart';
 import 'package:fitnect/core/data/api/user_api.dart';
+import 'package:fitnect/core/data/entities/auth_result.dart';
 import 'package:fitnect/core/data/entities/user_entity.dart';
 import 'package:fitnect/core/security/secured_storage.dart';
 import 'package:fitnect/modules/authentication/api/authentication_api.dart';
@@ -48,7 +49,7 @@ abstract class AuthenticationRepository {
   Future<void> logout();
 
   /// Signin with Google account
-  Future<void> signinWithGoogle();
+  Future<AuthResult> signinWithGoogle();
 
   /// Signin with Google Play Games account on Android
   Future<void> signinWithGooglePlayGames();
@@ -161,12 +162,19 @@ class HttpAuthenticationRepository implements AuthenticationRepository {
   }
 
   @override
-  Future<void> signinWithGoogle() async {
+  Future<AuthResult> signinWithGoogle() async {
     try {
       _logger.d('Signing in with Google');
-      final credentials = await _authenticationApi.signinWithGoogle();
-      await _storage.write(value: credentials);
-      _httpClient.authToken = credentials.token;
+      final result = await _authenticationApi.signinWithGoogle();
+
+      // Store the credentials for future API requests
+      await _storage.write(value: result.credentials);
+      _httpClient.authToken = result.credentials.token;
+
+      // If user entity was included, we could cache it
+      // This is optional since UserStateNotifier will load it anyway
+
+      return result;
     } on ApiError catch (e) {
       throw SigninException.fromApiError(e);
     } catch (e) {

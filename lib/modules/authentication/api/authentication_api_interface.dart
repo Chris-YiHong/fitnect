@@ -1,7 +1,11 @@
+import 'package:fitnect/core/data/entities/auth_result.dart';
 import 'package:fitnect/core/data/entities/user_entity.dart';
 import 'package:fitnect/core/initializer/onstart_service.dart';
 
 abstract class AuthenticationApi implements OnStartService {
+  /// Initialize the authentication API
+  Future<void> init();
+
   /// Get the current user credentials or null if not connected
   Future<Credentials?> get();
 
@@ -20,7 +24,7 @@ abstract class AuthenticationApi implements OnStartService {
 
   /// Signin with Google account
   /// Requires the [google_sign_in](https://pub.dev/packages/google_sign_in) package
-  Future<Credentials> signinWithGoogle();
+  Future<AuthResult> signinWithGoogle();
 
   /// Signin with Google Play account
   /// Requires the [google_sign_in](https://pub.dev/packages/google_sign_in) package
