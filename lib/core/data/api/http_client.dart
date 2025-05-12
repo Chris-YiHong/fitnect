@@ -1,4 +1,4 @@
-import 'package:fitnect/environnements.dart';
+import 'package:fitnect/core/config/env_config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +28,7 @@ class HttpClient with DioMixin implements Dio {
   }
 
   factory HttpClient.fromEnv() {
-    final env = Environment.fromEnv();
-    return HttpClient(baseUrl: env.backendUrl);
+    final env = EnvConfig.current;
+    return HttpClient(baseUrl: env.apiBaseUrl);
   }
 }

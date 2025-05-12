@@ -3,6 +3,8 @@ import 'package:fitnect/core/data/entities/auth_result.dart';
 import 'package:fitnect/core/data/entities/user_entity.dart';
 import 'package:fitnect/core/data/api/http_client.dart';
 import 'package:fitnect/modules/authentication/api/authentication_api_interface.dart';
+import 'package:fitnect/modules/authentication/api/models/google_auth_request.dart';
+import 'package:fitnect/modules/authentication/api/models/google_auth_response.dart';
 
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -113,16 +115,10 @@ class HttpAuthenticationApi implements AuthenticationApi {
 
       _logger.d('Google sign-in successful: ${loginResult.email}');
 
-      // Get the ID token to send to your backend
-      final idToken = googleAuth.idToken;
-      if (idToken == null) {
-        throw ApiError(code: 400, message: 'Failed to obtain Google ID token');
-      }
-
       try {
         // Development fallback for when there's no backend
         if (kDebugMode && false) {
-          // Change to true to use fake auth during development
+          // Set to true to use development fallback for testing
           _logger.w('Using development mode authentication - no backend calls');
           // Return fake credentials for development
           return AuthResult(
@@ -143,40 +139,70 @@ class HttpAuthenticationApi implements AuthenticationApi {
           );
         }
 
-        // Send the ID token to your backend for verification and authentication
+        // Create the request payload
+        final googleAuthRequest = GoogleAuthRequest(
+          googleId: loginResult.id,
+          email: loginResult.email,
+        );
+
+        _logger.d(
+          'Sending Google auth request: ${googleAuthRequest.toString()}',
+        );
+
+        // Send the request to the Google auth endpoint
         final response = await _client.post(
-          '/auth/google',
-          data: {
-            'idToken': idToken,
-            'email': loginResult.email,
-            'name': loginResult.displayName,
-            'photoUrl': loginResult.photoUrl,
-          },
+          '/users/google_auth',
+          data: googleAuthRequest.toJson(),
         );
 
-        // Parse the response from your backend
-        final data = response.data as Map<String, dynamic>;
+        _logger.d('Google auth response received: ${response.data}');
 
-        final credentials = Credentials(
-          id: data['id'] as String,
-          token: data['token'] as String,
+        // Parse the response
+        final googleAuthResponse = GoogleAuthResponse.fromJson(
+          response.data as Map<String, dynamic>,
         );
 
-        // Check if this is a new user
-        final isNewUser = data['isNewUser'] as bool;
+        _logger.d(
+          'Parsed Google auth response: ${googleAuthResponse.toString()}',
+        );
+        _logger.d(
+          'onBoarding value from response: ${googleAuthResponse.onBoarding}',
+        );
 
-        // Parse user entity if included in response
-        UserEntity? userEntity;
-        if (data.containsKey('user')) {
-          userEntity = UserEntity.fromJson(
-            data['user'] as Map<String, dynamic>,
+        // Check if the response was successful
+        if (googleAuthResponse.code != 200) {
+          throw ApiError(
+            code: googleAuthResponse.code,
+            message: googleAuthResponse.message,
           );
         }
 
+        // Create the credentials with the token from the response
+        final credentials = Credentials(
+          id: loginResult.id, // Use Google ID as the user ID
+          token: googleAuthResponse.token,
+        );
+
+        // For clarity: if onBoarding is true, the user has already onboarded
+        // and is therefore NOT a new user
+        final isNewUser = !googleAuthResponse.onBoarding;
+        _logger.d(
+          'isNewUser determined as: $isNewUser (opposite of onBoarding)',
+        );
+
+        // Return the auth result
         return AuthResult(
           credentials: credentials,
           isNewUser: isNewUser,
-          userEntity: userEntity,
+          userEntity: UserEntity(
+            id: loginResult.id,
+            email: loginResult.email,
+            name: loginResult.displayName,
+            avatarPath: loginResult.photoUrl,
+            creationDate: DateTime.now(),
+            lastUpdateDate: DateTime.now(),
+            onboarded: googleAuthResponse.onBoarding,
+          ),
         );
       } on DioException catch (e) {
         // Handle backend-specific errors
@@ -186,7 +212,8 @@ class HttpAuthenticationApi implements AuthenticationApi {
         if (kDebugMode &&
             (e.type == DioExceptionType.connectionTimeout ||
                 e.type == DioExceptionType.receiveTimeout ||
-                e.type == DioExceptionType.connectionError)) {
+                e.type == DioExceptionType.connectionError ||
+                e.response?.statusCode == 404)) {
           _logger.w('Backend unreachable, using development fallback');
           return AuthResult(
             credentials: Credentials(
@@ -194,7 +221,15 @@ class HttpAuthenticationApi implements AuthenticationApi {
               token: 'fake-token-${DateTime.now().millisecondsSinceEpoch}',
             ),
             isNewUser: true, // Change to test different flows
-            userEntity: null,
+            userEntity: UserEntity(
+              id: loginResult.id,
+              email: loginResult.email,
+              name: loginResult.displayName,
+              avatarPath: loginResult.photoUrl,
+              creationDate: DateTime.now(),
+              lastUpdateDate: DateTime.now(),
+              onboarded: false, // User hasn't completed onboarding
+            ),
           );
         }
 

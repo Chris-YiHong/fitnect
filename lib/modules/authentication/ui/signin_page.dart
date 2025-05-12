@@ -149,6 +149,12 @@ class SigninPage extends ConsumerWidget {
                       children: [
                         if (Platform.isIOS) const AppleSigninComponent(),
                         const GoogleSignInComponent(),
+                        IconButton(
+                          onPressed: () {
+                            context.push('/signinWithPhone');
+                          },
+                          icon: const Icon(Icons.phone),
+                        ),
                       ],
                     ),
                   ],

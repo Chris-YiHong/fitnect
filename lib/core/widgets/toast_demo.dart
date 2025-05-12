@@ -1,4 +1,5 @@
 import 'package:fitnect/core/widgets/toast_service.dart';
+import 'package:fitnect/modules/authentication/providers/signin_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,6 +75,35 @@ class ToastDemo extends ConsumerWidget {
           ),
           child: const Text('Show Custom Toast'),
         ),
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 16),
+        Text(
+          'Test API Implementation',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              final result =
+                  await ref
+                      .read(signinStateProvider.notifier)
+                      .signinWithGoogle();
+
+              toastService.showSuccess(
+                'Google Sign-in Successful: ${result.isNewUser ? "New User" : "Existing User"}\nToken: ${result.credentials.token.substring(0, 10)}...',
+              );
+            } catch (e) {
+              toastService.showError('Google Sign-in Failed: $e');
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+          ),
+          child: const Text('Test Google Sign-in API'),
+        ),
       ],
     );
   }
@@ -96,9 +126,12 @@ class ToastDemoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Toast Demo')),
-      body: const Center(
-        child: Padding(padding: EdgeInsets.all(16.0), child: ToastDemo()),
+      appBar: AppBar(title: const Text('Toast & API Demo')),
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Center(child: ToastDemo()),
+        ),
       ),
     );
   }
