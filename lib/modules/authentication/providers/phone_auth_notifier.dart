@@ -39,31 +39,42 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
     return PhoneAuthState.inputPhone(linkPhoneToUser: linkUser);
   }
 
+  /// Helper to normalize phone number to E.164 format (prepend + if missing)
+  String _normalizePhoneNumber(String phoneNumber) {
+    final trimmed = phoneNumber.trim();
+    if (trimmed.startsWith('+')) return trimmed;
+    // Optionally, you could add logic to infer country code if needed
+    return '+$trimmed';
+  }
+
   /// Send the OTP code to the user's phone number
   /// - If the phone number isn't linked to a user, we will link it to the current user
   /// - Otherwise, we will sign in the user with the phone number
   Future<void> sendOtp(String phoneNumber) async {
+    final normalizedPhone = _normalizePhoneNumber(phoneNumber);
     state = state.copyWith(
       isLoading: true,
       error: null,
-      phoneNumber: phoneNumber,
+      phoneNumber: normalizedPhone,
     );
 
     try {
       Logger().i("Send OTP : linkPhoneToUser -> ${state.linkPhoneToUser}");
       final verificationId = switch (state.linkPhoneToUser) {
-        true => await _authRepository.updateAuthPhone(phoneNumber),
-        false => await _authRepository.signinWithPhone(phoneNumber),
+        true => await _authRepository.updateAuthPhone(normalizedPhone),
+        false => await _authRepository.signinWithPhone(normalizedPhone),
       };
 
       state = PhoneAuthState.verifyOtp(
-        phoneNumber: phoneNumber,
+        phoneNumber: normalizedPhone,
         verificationId: verificationId,
       );
     } on PhoneAlreadyLinkedException {
-      final verificationId = await _authRepository.signinWithPhone(phoneNumber);
+      final verificationId = await _authRepository.signinWithPhone(
+        normalizedPhone,
+      );
       state = PhoneAuthState.verifyOtp(
-        phoneNumber: phoneNumber,
+        phoneNumber: normalizedPhone,
         verificationId: verificationId,
       );
     } on PhoneAuthException catch (e, stacktrace) {

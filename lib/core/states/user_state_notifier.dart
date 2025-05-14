@@ -55,7 +55,7 @@ class UserStateNotifier extends StateNotifier<UserState>
     required DeviceRepository deviceRepository,
     required UserRepository userRepository,
     Logger? logger,
-    this.mode = AuthenticationMode.anonymous,
+    this.mode = AuthenticationMode.authRequired,
   }) : _authenticationRepository = authenticationRepository,
        _userRepository = userRepository,
        _deviceRepository = deviceRepository,
