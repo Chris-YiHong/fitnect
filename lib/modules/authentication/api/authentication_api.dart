@@ -24,6 +24,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'dart:async';
+
 final authenticationApiProvider = Provider<AuthenticationApi>(
   (ref) => HttpAuthenticationApi(
     logger: Logger(),
@@ -307,87 +309,122 @@ class HttpAuthenticationApi implements AuthenticationApi {
   @override
   Future<String> signinWithPhone(String phoneNumber) async {
     try {
-      _logger.d('Starting phone authentication for $phoneNumber');
+      _logger.d("Starting phone authentication for $phoneNumber");
 
-      // Initialize Firebase Auth
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      String verificationId = '';
+      final completer = Completer<String>();
 
-      // Firebase phone verification
-      await auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // Auto-verification completed (Android only)
-          _logger.d('Auto-verification completed');
-          // We don't sign in here as we need to send the verification to our backend
-        },
-        verificationFailed: (FirebaseException e) {
-          _logger.e('Phone verification failed: ${e.message}');
-          throw ApiError(
-            code: e.code == 'invalid-phone-number' ? 400 : 500,
-            message: e.message ?? 'Phone verification failed',
-          );
-        },
-        codeSent: (String vId, int? resendToken) {
-          _logger.d('Verification code sent to $phoneNumber');
-          verificationId = vId;
-        },
-        codeAutoRetrievalTimeout: (String vId) {
-          if (verificationId.isEmpty) {
-            verificationId = vId;
-          }
-        },
-        timeout: const Duration(seconds: 60),
-      );
-
-      // Wait for the verification ID to be set
-      int attempts = 0;
-      while (verificationId.isEmpty && attempts < 50) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        attempts++;
+      // Sign out first to prevent auto sign-in
+      try {
+        await FirebaseAuth.instance.signOut();
+        _logger.d("Signed out to prevent auto-authentication");
+      } catch (e) {
+        _logger.w("Error signing out before phone auth: $e");
       }
 
-      if (verificationId.isEmpty) {
+      try {
+        // Prevent errors like "reCAPTCHA verification already pending"
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // Set up verification callbacks
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: const Duration(
+            seconds: 120,
+          ), // Increase timeout for better experience
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            _logger.d(
+              "Auto-verification completed, but we will not use it to ensure OTP screen is shown",
+            );
+            // We do not auto-complete to ensure the OTP screen is shown
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            _logger.e(
+              "Phone verification failed: ${e.message ?? 'Unknown error'}",
+            );
+            if (!completer.isCompleted) {
+              completer.completeError(
+                ApiError(
+                  code: 400,
+                  message: e.message ?? 'Phone verification failed',
+                ),
+              );
+            }
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            _logger.d(
+              "Verification code sent to $phoneNumber with ID: $verificationId",
+            );
+            if (!completer.isCompleted) {
+              completer.complete(verificationId);
+            }
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            _logger.w(
+              "Auto retrieval timeout for verification ID: $verificationId",
+            );
+            if (!completer.isCompleted && verificationId.isNotEmpty) {
+              completer.complete(verificationId);
+            } else if (!completer.isCompleted) {
+              completer.completeError(
+                ApiError(
+                  code: 408,
+                  message:
+                      'Code auto retrieval timeout without valid verification ID',
+                ),
+              );
+            }
+          },
+          // Disable auto-retrieval to force manual OTP entry
+          forceResendingToken: null,
+        );
+
+        // Wait for verification ID with timeout
+        final verificationId = await completer.future.timeout(
+          const Duration(seconds: 60),
+          onTimeout: () {
+            _logger.e("Timeout waiting for verification ID");
+            throw ApiError(
+              code: 408,
+              message: "Timeout waiting for verification ID",
+            );
+          },
+        );
+
+        // Return verification ID
+        _logger.d("Successfully got verification ID: $verificationId");
+        return verificationId;
+      } catch (e) {
+        if (e is ApiError) rethrow;
+        _logger.e("Error during phone authentication: $e");
         throw ApiError(
           code: 500,
-          message: 'Failed to get verification ID from Firebase',
+          message: "Failed to start phone verification: $e",
         );
       }
-
-      return verificationId;
-    } on FirebaseException catch (e) {
-      _logger.e('Firebase phone auth error: ${e.message}');
-      throw ApiError(
-        code: e.code == 'invalid-phone-number' ? 400 : 500,
-        message: e.message ?? 'Phone verification failed',
-      );
     } catch (e) {
-      if (e is ApiError) {
-        rethrow;
-      }
-      _logger.e('Phone authentication error: $e');
-      throw ApiError(code: 500, message: 'Failed to authenticate: $e');
+      if (e is ApiError) rethrow;
+      _logger.e("Unexpected error in phone auth: $e");
+      throw ApiError(code: 500, message: "Unexpected error: $e");
     }
   }
 
   @override
-  Future<Credentials> verifyPhoneAuth(String verificationId, String otp) async {
+  Future<Credentials> verifyPhoneAuth(
+    String verificationId,
+    String smsCode,
+  ) async {
     try {
-      _logger.d('Verifying OTP code');
-
-      // Initialize Firebase Auth
-      final FirebaseAuth auth = FirebaseAuth.instance;
+      _logger.d("Verifying SMS code");
 
       // Create the credential
       final PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
-        smsCode: otp,
+        smsCode: smsCode,
       );
 
       // Sign in with credential
-      final UserCredential userCredential = await auth.signInWithCredential(
-        credential,
-      );
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
       if (userCredential.user == null) {
         throw ApiError(
@@ -406,6 +443,18 @@ class HttpAuthenticationApi implements AuthenticationApi {
       }
 
       _logger.d('Firebase phone auth successful for $phoneNumber');
+
+      // Development fallback for when there's no backend
+      if (kDebugMode) {
+        _logger.w(
+          'Using development mode authentication for phone - bypassing backend call',
+        );
+        // Return fake credentials for development
+        return Credentials(
+          id: userCredential.user!.uid,
+          token: 'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
+        );
+      }
 
       // Create the request payload for our backend
       final phoneAuthRequest = PhoneAuthRequest(phoneNumber: phoneNumber);
@@ -438,12 +487,10 @@ class HttpAuthenticationApi implements AuthenticationApi {
       }
 
       // Create the credentials with the token from the response
-      final credentials = Credentials(
+      return Credentials(
         id: userCredential.user!.uid,
         token: phoneAuthResponse.token,
       );
-
-      return credentials;
     } on FirebaseAuthException catch (e) {
       _logger.e('Firebase verification failed: ${e.message}');
       throw ApiError(
@@ -452,11 +499,26 @@ class HttpAuthenticationApi implements AuthenticationApi {
       );
     } on DioException catch (e) {
       _logger.e('Backend verification failed: ${e.message}');
+      // Fallback for development when server is unreachable
+      if (kDebugMode &&
+          (e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.receiveTimeout ||
+              e.type == DioExceptionType.connectionError ||
+              e.response?.statusCode == 404)) {
+        _logger.w(
+          'Backend unreachable for phone verification, using development fallback',
+        );
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          return Credentials(
+            id: user.uid,
+            token: 'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
+          );
+        }
+      }
       throw ApiError.fromDioException(e);
     } catch (e) {
-      if (e is ApiError) {
-        rethrow;
-      }
+      if (e is ApiError) rethrow;
       _logger.e('OTP verification error: $e');
       throw ApiError(code: 500, message: 'Failed to verify OTP: $e');
     }

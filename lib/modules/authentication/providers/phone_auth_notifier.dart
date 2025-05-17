@@ -1,3 +1,4 @@
+import 'package:fitnect/core/data/api/base_api_exceptions.dart';
 import 'package:fitnect/core/data/models/user.dart';
 import 'package:fitnect/core/states/user_state_notifier.dart';
 import 'package:fitnect/core/widgets/toast.dart';
@@ -24,19 +25,12 @@ part 'phone_auth_notifier.g.dart';
 @Riverpod(keepAlive: false)
 class PhoneAuthNotifier extends _$PhoneAuthNotifier {
   late AuthenticationRepository _authRepository;
+  final _logger = Logger();
 
   @override
   PhoneAuthState build() {
     _authRepository = ref.read(authRepositoryProvider);
-    final userState = ref.read(userStateNotifierProvider);
-
-    final linkUser = switch (userState.user) {
-      AuthenticatedUserData() => false,
-      AnonymousUserData(:final id) when id != null => true,
-      _ => false,
-    };
-
-    return PhoneAuthState.inputPhone(linkPhoneToUser: linkUser);
+    return const PhoneAuthState.inputPhone(linkPhoneToUser: false);
   }
 
   /// Helper to normalize phone number to E.164 format (prepend + if missing)
@@ -51,7 +45,13 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
   /// - If the phone number isn't linked to a user, we will link it to the current user
   /// - Otherwise, we will sign in the user with the phone number
   Future<void> sendOtp(String phoneNumber) async {
+    if (state.isLoading) {
+      return;
+    }
+
     final normalizedPhone = _normalizePhoneNumber(phoneNumber);
+    _logger.d("Sending OTP to: $normalizedPhone");
+
     state = state.copyWith(
       isLoading: true,
       error: null,
@@ -59,34 +59,26 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
     );
 
     try {
-      Logger().i("Send OTP : linkPhoneToUser -> ${state.linkPhoneToUser}");
-      final verificationId = switch (state.linkPhoneToUser) {
-        true => await _authRepository.updateAuthPhone(normalizedPhone),
-        false => await _authRepository.signinWithPhone(normalizedPhone),
-      };
-
-      state = PhoneAuthState.verifyOtp(
-        phoneNumber: normalizedPhone,
-        verificationId: verificationId,
-      );
-    } on PhoneAlreadyLinkedException {
+      // Get verification ID from repository
       final verificationId = await _authRepository.signinWithPhone(
         normalizedPhone,
       );
+
+      // Update the state with the verification ID to show OTP verification UI
       state = PhoneAuthState.verifyOtp(
         phoneNumber: normalizedPhone,
         verificationId: verificationId,
+        linkPhoneToUser: false,
       );
-    } on PhoneAuthException catch (e, stacktrace) {
-      debugPrint(
-        "Error while sending confirmation code, verify your phone number $e : $stacktrace",
-      );
-      state = state.copyWith(
-        isLoading: false,
-        error:
-            "Error while sending confirmation code, verify your phone number",
-      );
+
+      _logger.d("OTP sent successfully, moved to verification state");
+
+      // We don't need to navigate - the UI will update based on the new state
+    } on ApiError catch (e) {
+      _logger.e("API error while sending OTP: ${e.message}");
+      state = state.copyWith(isLoading: false, error: e.message);
     } catch (e) {
+      _logger.e("Error while sending OTP: $e");
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to send verification code: $e',
@@ -94,44 +86,78 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
     }
   }
 
+  /// Verify the OTP code
   Future<void> verifyOtp(String otp) async {
+    if (state.isLoading) {
+      return;
+    }
+
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       final verificationId = switch (state) {
         PhoneAuthVerifyOtpState(:final verificationId) => verificationId,
-        _ => throw Exception("Invalid state"),
+        _ => throw Exception("Invalid state: expected OTP verification state"),
       };
 
-      final _ = switch (state.linkPhoneToUser) {
-        true => await _authRepository.confirmLinkPhoneAuth(verificationId, otp),
-        false => await _authRepository.verifyPhoneAuth(verificationId, otp),
-      };
+      _logger.d("Verifying OTP for verification ID: $verificationId");
 
+      // Call the repository to verify the OTP
+      await _authRepository.verifyPhoneAuth(verificationId, otp);
+
+      _logger.d("OTP verification successful!");
+
+      // Show success toast
       ref
           .read(toastProvider)
           .success(
             title: "Success",
             text: "You are now signed in with your phone number",
           );
-      await Future.delayed(const Duration(seconds: 2));
-      ref.read(goRouterProvider).go("/");
-    } on PhoneAuthException catch (e) {
-      state = state.copyWith(isLoading: false, error: e.message);
-    } on PhoneAlreadyLinkedException {
-      // on firebase, this is where this error is thrown
-      // we can delete this when using Supabase
-      state = state.copyWith(linkPhoneToUser: false);
-      return sendOtp(otp);
+
+      // Make sure to set loading to false before navigation
+      state = state.copyWith(isLoading: false);
+
+      // Wait a moment before navigation to allow UI to update with success message
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Navigate to home page
+      try {
+        _logger.d("Navigating to home page after successful verification");
+        ref.read(goRouterProvider).go("/home");
+      } catch (e) {
+        _logger.e("Error navigating to home: $e");
+        // Fallback to root if home navigation fails
+        ref.read(goRouterProvider).go("/");
+      }
+    } on ApiError catch (e) {
+      _logger.e("API error during OTP verification: ${e.message}");
+      final errorMessage = e.message ?? 'Verification failed';
+      state = state.copyWith(isLoading: false, error: errorMessage);
+
+      // Show error toast
+      ref
+          .read(toastProvider)
+          .error(title: "Verification Failed", text: errorMessage);
     } catch (e) {
+      _logger.e("Error during OTP verification: $e");
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to verify code: $e',
       );
+
+      // Show error toast
+      ref
+          .read(toastProvider)
+          .error(
+            title: "Verification Error",
+            text: "Failed to verify code. Please try again.",
+          );
     }
   }
 
+  /// Reset the state to go back to phone input
   void reset() {
-    state = const PhoneAuthState.inputPhone();
+    state = const PhoneAuthState.inputPhone(linkPhoneToUser: false);
   }
 }

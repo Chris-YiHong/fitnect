@@ -73,6 +73,13 @@ GoRouter generateRouter({
         name: 'signinWithPhone',
         path: '/signinWithPhone',
         builder: (context, state) => const PhoneAuthPage(),
+        routes: [
+          GoRoute(
+            name: 'otpVerification',
+            path: 'verify',
+            builder: (context, state) => const PhoneAuthPage(),
+          ),
+        ],
       ),
       GoRoute(
         name: 'premium',
