@@ -9,13 +9,13 @@ part of 'onboarding_form_model.dart';
 _Injury _$InjuryFromJson(Map json) => _Injury(
   name: json['name'] as String,
   description: json['description'] as String,
-  date: DateTime.parse(json['date'] as String),
+  date: _dateTimeFromIsoString(json['date'] as String),
 );
 
 Map<String, dynamic> _$InjuryToJson(_Injury instance) => <String, dynamic>{
   'name': instance.name,
   'description': instance.description,
-  'date': instance.date.toIso8601String(),
+  'date': _dateTimeToIsoString(instance.date),
 };
 
 _HealthCondition _$HealthConditionFromJson(Map json) => _HealthCondition(
@@ -33,10 +33,7 @@ _OnboardingFormModel _$OnboardingFormModelFromJson(Map json) =>
     _OnboardingFormModel(
       name: json['name'] as String?,
       gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
-      birthDate:
-          json['birthDate'] == null
-              ? null
-              : DateTime.parse(json['birthDate'] as String),
+      birthDate: _dateTimeFromIsoStringNullable(json['birthDate'] as String?),
       heightCm: (json['heightCm'] as num?)?.toDouble(),
       weightKg: (json['weightKg'] as num?)?.toDouble(),
       fitnessGoals:
@@ -70,7 +67,7 @@ Map<String, dynamic> _$OnboardingFormModelToJson(
 ) => <String, dynamic>{
   'name': instance.name,
   'gender': _$GenderEnumMap[instance.gender],
-  'birthDate': instance.birthDate?.toIso8601String(),
+  'birthDate': _dateTimeToIsoStringNullable(instance.birthDate),
   'heightCm': instance.heightCm,
   'weightKg': instance.weightKg,
   'fitnessGoals':

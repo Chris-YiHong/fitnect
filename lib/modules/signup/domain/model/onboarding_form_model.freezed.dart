@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Injury {
 
- String get name; String get description; DateTime get date;
+ String get name; String get description;@JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString) DateTime get date;
 /// Create a copy of Injury
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $InjuryCopyWith<$Res>  {
   factory $InjuryCopyWith(Injury value, $Res Function(Injury) _then) = _$InjuryCopyWithImpl;
 @useResult
 $Res call({
- String name, String description, DateTime date
+ String name, String description,@JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString) DateTime date
 });
 
 
@@ -82,12 +82,12 @@ as DateTime,
 @JsonSerializable()
 
 class _Injury implements Injury {
-  const _Injury({required this.name, required this.description, required this.date});
+  const _Injury({required this.name, required this.description, @JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString) required this.date});
   factory _Injury.fromJson(Map<String, dynamic> json) => _$InjuryFromJson(json);
 
 @override final  String name;
 @override final  String description;
-@override final  DateTime date;
+@override@JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString) final  DateTime date;
 
 /// Create a copy of Injury
 /// with the given fields replaced by the non-null parameter values.
@@ -122,7 +122,7 @@ abstract mixin class _$InjuryCopyWith<$Res> implements $InjuryCopyWith<$Res> {
   factory _$InjuryCopyWith(_Injury value, $Res Function(_Injury) _then) = __$InjuryCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String description, DateTime date
+ String name, String description,@JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString) DateTime date
 });
 
 
@@ -291,7 +291,7 @@ as String,
 /// @nodoc
 mixin _$OnboardingFormModel {
 
- String? get name; Gender? get gender; DateTime? get birthDate; double? get heightCm; double? get weightKg; List<FitnessGoal> get fitnessGoals; ActivityLevel? get activityLevel; String? get diet; List<Injury> get injuries; List<HealthCondition> get healthConditions;
+ String? get name; Gender? get gender;@JsonKey(toJson: _dateTimeToIsoStringNullable, fromJson: _dateTimeFromIsoStringNullable) DateTime? get birthDate; double? get heightCm; double? get weightKg; List<FitnessGoal> get fitnessGoals; ActivityLevel? get activityLevel; String? get diet; List<Injury> get injuries; List<HealthCondition> get healthConditions;
 /// Create a copy of OnboardingFormModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,7 +324,7 @@ abstract mixin class $OnboardingFormModelCopyWith<$Res>  {
   factory $OnboardingFormModelCopyWith(OnboardingFormModel value, $Res Function(OnboardingFormModel) _then) = _$OnboardingFormModelCopyWithImpl;
 @useResult
 $Res call({
- String? name, Gender? gender, DateTime? birthDate, double? heightCm, double? weightKg, List<FitnessGoal> fitnessGoals, ActivityLevel? activityLevel, String? diet, List<Injury> injuries, List<HealthCondition> healthConditions
+ String? name, Gender? gender,@JsonKey(toJson: _dateTimeToIsoStringNullable, fromJson: _dateTimeFromIsoStringNullable) DateTime? birthDate, double? heightCm, double? weightKg, List<FitnessGoal> fitnessGoals, ActivityLevel? activityLevel, String? diet, List<Injury> injuries, List<HealthCondition> healthConditions
 });
 
 
@@ -364,12 +364,12 @@ as List<HealthCondition>,
 @JsonSerializable()
 
 class _OnboardingFormModel extends OnboardingFormModel {
-  const _OnboardingFormModel({this.name, this.gender, this.birthDate, this.heightCm, this.weightKg, final  List<FitnessGoal> fitnessGoals = const [], this.activityLevel, this.diet, final  List<Injury> injuries = const [], final  List<HealthCondition> healthConditions = const []}): _fitnessGoals = fitnessGoals,_injuries = injuries,_healthConditions = healthConditions,super._();
+  const _OnboardingFormModel({this.name, this.gender, @JsonKey(toJson: _dateTimeToIsoStringNullable, fromJson: _dateTimeFromIsoStringNullable) this.birthDate, this.heightCm, this.weightKg, final  List<FitnessGoal> fitnessGoals = const [], this.activityLevel, this.diet, final  List<Injury> injuries = const [], final  List<HealthCondition> healthConditions = const []}): _fitnessGoals = fitnessGoals,_injuries = injuries,_healthConditions = healthConditions,super._();
   factory _OnboardingFormModel.fromJson(Map<String, dynamic> json) => _$OnboardingFormModelFromJson(json);
 
 @override final  String? name;
 @override final  Gender? gender;
-@override final  DateTime? birthDate;
+@override@JsonKey(toJson: _dateTimeToIsoStringNullable, fromJson: _dateTimeFromIsoStringNullable) final  DateTime? birthDate;
 @override final  double? heightCm;
 @override final  double? weightKg;
  final  List<FitnessGoal> _fitnessGoals;
@@ -429,7 +429,7 @@ abstract mixin class _$OnboardingFormModelCopyWith<$Res> implements $OnboardingF
   factory _$OnboardingFormModelCopyWith(_OnboardingFormModel value, $Res Function(_OnboardingFormModel) _then) = __$OnboardingFormModelCopyWithImpl;
 @override @useResult
 $Res call({
- String? name, Gender? gender, DateTime? birthDate, double? heightCm, double? weightKg, List<FitnessGoal> fitnessGoals, ActivityLevel? activityLevel, String? diet, List<Injury> injuries, List<HealthCondition> healthConditions
+ String? name, Gender? gender,@JsonKey(toJson: _dateTimeToIsoStringNullable, fromJson: _dateTimeFromIsoStringNullable) DateTime? birthDate, double? heightCm, double? weightKg, List<FitnessGoal> fitnessGoals, ActivityLevel? activityLevel, String? diet, List<Injury> injuries, List<HealthCondition> healthConditions
 });
 
 

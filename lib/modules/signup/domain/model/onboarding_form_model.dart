@@ -4,6 +4,15 @@ import 'package:fitnect/modules/signup/ui/signup_onboarding_page.dart';
 part 'onboarding_form_model.freezed.dart';
 part 'onboarding_form_model.g.dart';
 
+// Helper functions for DateTime serialization
+String _dateTimeToIsoString(DateTime date) => date.toUtc().toIso8601String();
+DateTime _dateTimeFromIsoString(String dateString) =>
+    DateTime.parse(dateString);
+String? _dateTimeToIsoStringNullable(DateTime? date) =>
+    date?.toUtc().toIso8601String();
+DateTime? _dateTimeFromIsoStringNullable(String? dateString) =>
+    dateString != null ? DateTime.parse(dateString) : null;
+
 enum Gender { male, female, other, preferNotToSay }
 
 enum ActivityLevel { sedentary, light, moderate, active, veryActive }
@@ -22,6 +31,7 @@ abstract class Injury with _$Injury {
   const factory Injury({
     required String name,
     required String description,
+    @JsonKey(toJson: _dateTimeToIsoString, fromJson: _dateTimeFromIsoString)
     required DateTime date,
   }) = _Injury;
 
@@ -44,6 +54,10 @@ abstract class OnboardingFormModel with _$OnboardingFormModel {
   const factory OnboardingFormModel({
     String? name,
     Gender? gender,
+    @JsonKey(
+      toJson: _dateTimeToIsoStringNullable,
+      fromJson: _dateTimeFromIsoStringNullable,
+    )
     DateTime? birthDate,
     double? heightCm,
     double? weightKg,

@@ -6,7 +6,7 @@ part of 'phone_auth_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$phoneAuthNotifierHash() => r'69fe22b6a7adaca8027a6051f2f161f147927f30';
+String _$phoneAuthNotifierHash() => r'dd1093bf19a64b8e8283f1810101a32756034db5';
 
 /// This notifier is used to handle the phone number authentication flow
 /// It is used to send the OTP code to the user's phone number
