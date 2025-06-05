@@ -102,10 +102,16 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
 
       _logger.d("Verifying OTP for verification ID: $verificationId");
 
-      // Call the repository to verify the OTP
-      await _authRepository.verifyPhoneAuth(verificationId, otp);
+      // Call the repository to verify the OTP and get AuthResult
+      final authResult = await _authRepository.verifyPhoneAuth(
+        verificationId,
+        otp,
+      );
 
       _logger.d("OTP verification successful!");
+
+      // Load the user state from the backend
+      await ref.read(userStateNotifierProvider.notifier).onSignin();
 
       // Show success toast
       ref
@@ -121,13 +127,22 @@ class PhoneAuthNotifier extends _$PhoneAuthNotifier {
       // Wait a moment before navigation to allow UI to update with success message
       await Future.delayed(const Duration(milliseconds: 500));
 
-      // Navigate to home page
+      // Navigate based on whether the user is new (needs onboarding)
       try {
-        _logger.d("Navigating to home page after successful verification");
-        ref.read(goRouterProvider).go("/home");
+        if (authResult.isNewUser) {
+          // New user - send to onboarding flow
+          _logger.d("Navigating to onboarding for new user");
+          ref
+              .read(goRouterProvider)
+              .goNamed('signupOnboarding', pathParameters: {'step': 'name'});
+        } else {
+          // Existing user - send to home
+          _logger.d("Navigating to home for existing user");
+          ref.read(goRouterProvider).goNamed('home');
+        }
       } catch (e) {
-        _logger.e("Error navigating to home: $e");
-        // Fallback to root if home navigation fails
+        _logger.e("Error navigating after phone verification: $e");
+        // Fallback to root if navigation fails
         ref.read(goRouterProvider).go("/");
       }
     } on ApiError catch (e) {

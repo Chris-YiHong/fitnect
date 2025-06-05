@@ -47,7 +47,7 @@ abstract class AuthenticationApi implements OnStartService {
   /// Verify the OTP code and authenticate the user
   /// [verificationId] is the ID returned by [requestPhoneAuth]
   /// [otp] is the code received by the user
-  Future<Credentials> verifyPhoneAuth(String verificationId, String otp);
+  Future<AuthResult> verifyPhoneAuth(String verificationId, String otp);
 
   /// Update the phone number of the current user
   /// [phoneNumber] is the new phone number to set

@@ -8,6 +8,7 @@ import 'package:fitnect/modules/authentication/providers/signin_state_provider.d
 import 'package:fitnect/modules/authentication/ui/components/apple_signin.dart';
 import 'package:fitnect/modules/authentication/ui/components/facebook_signin.dart';
 import 'package:fitnect/modules/authentication/ui/components/google_signin.dart';
+import 'package:fitnect/modules/authentication/ui/components/phone_signin.dart';
 import 'package:fitnect/modules/authentication/ui/widgets/round_signin.dart';
 import 'package:fitnect/modules/authentication/ui/widgets/signin_header.dart';
 import 'package:fitnect/modules/authentication/ui/widgets/social_separator.dart';
@@ -149,12 +150,7 @@ class SigninPage extends ConsumerWidget {
                       children: [
                         if (Platform.isIOS) const AppleSigninComponent(),
                         const GoogleSignInComponent(),
-                        IconButton(
-                          onPressed: () {
-                            context.push('/signinWithPhone');
-                          },
-                          icon: const Icon(Icons.phone),
-                        ),
+                        const PhoneSignInComponent(),
                       ],
                     ),
                   ],

@@ -409,7 +409,7 @@ class HttpAuthenticationApi implements AuthenticationApi {
   }
 
   @override
-  Future<Credentials> verifyPhoneAuth(
+  Future<AuthResult> verifyPhoneAuth(
     String verificationId,
     String smsCode,
   ) async {
@@ -433,40 +433,51 @@ class HttpAuthenticationApi implements AuthenticationApi {
         );
       }
 
-      final String? phoneNumber = userCredential.user?.phoneNumber;
-
-      if (phoneNumber == null) {
-        throw ApiError(
-          code: 500,
-          message: 'Phone number not available after authentication',
-        );
-      }
-
-      _logger.d('Firebase phone auth successful for $phoneNumber');
-
-      // Development fallback for when there's no backend
-      if (kDebugMode) {
-        _logger.w(
-          'Using development mode authentication for phone - bypassing backend call',
-        );
-        // Return fake credentials for development
-        return Credentials(
-          id: userCredential.user!.uid,
-          token: 'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
-        );
-      }
-
-      // Create the request payload for our backend
-      final phoneAuthRequest = PhoneAuthRequest(phoneNumber: phoneNumber);
-
       _logger.d(
-        'Sending Phone auth request to backend: ${phoneAuthRequest.toString()}',
+        'Firebase phone auth successful for ${userCredential.user!.phoneNumber}',
       );
+
+      // Get the Firebase ID token
+      final String? idTokenNullable = await userCredential.user!.getIdToken();
+      if (idTokenNullable == null) {
+        throw ApiError(code: 500, message: 'Failed to get Firebase ID token');
+      }
+      final String idToken = idTokenNullable;
+      _logger.d('Got Firebase ID token for phone auth');
+
+      // // Development fallback for when there's no backend
+      // if (kDebugMode) {
+      //   _logger.w(
+      //     'Using development mode authentication for phone - bypassing backend call',
+      //   );
+      //   // Return fake auth result for development
+      //   return AuthResult(
+      //     credentials: Credentials(
+      //       id: userCredential.user!.uid,
+      //       token: 'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
+      //     ),
+      //     isNewUser: true, // Change to test different flows
+      //     userEntity: UserEntity(
+      //       id: userCredential.user!.uid,
+      //       email: userCredential.user!.email,
+      //       name: userCredential.user!.displayName,
+      //       avatarPath: userCredential.user!.photoURL,
+      //       creationDate: DateTime.now(),
+      //       lastUpdateDate: DateTime.now(),
+      //       onboarded: false, // User hasn't completed onboarding
+      //     ),
+      //   );
+      // }
+
+      // Create the request payload with idToken for our backend
+      final requestData = {'idToken': idToken};
+
+      _logger.d('Sending Phone auth request to backend with idToken');
 
       // Send the request to the Phone auth endpoint
       final response = await _client.post(
         '/users/phone_auth',
-        data: phoneAuthRequest.toJson(),
+        data: requestData,
       );
 
       _logger.d('Phone auth response received: ${response.data}');
@@ -487,9 +498,29 @@ class HttpAuthenticationApi implements AuthenticationApi {
       }
 
       // Create the credentials with the token from the response
-      return Credentials(
+      final credentials = Credentials(
         id: userCredential.user!.uid,
         token: phoneAuthResponse.token,
+      );
+
+      // For clarity: if onBoarding is true, the user has already onboarded
+      // and is therefore NOT a new user
+      final isNewUser = !phoneAuthResponse.onBoarding;
+      _logger.d('isNewUser determined as: $isNewUser (opposite of onBoarding)');
+
+      // Return the auth result
+      return AuthResult(
+        credentials: credentials,
+        isNewUser: isNewUser,
+        userEntity: UserEntity(
+          id: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          name: userCredential.user!.displayName,
+          avatarPath: userCredential.user!.photoURL,
+          creationDate: DateTime.now(),
+          lastUpdateDate: DateTime.now(),
+          onboarded: phoneAuthResponse.onBoarding,
+        ),
       );
     } on FirebaseAuthException catch (e) {
       _logger.e('Firebase verification failed: ${e.message}');
@@ -510,9 +541,22 @@ class HttpAuthenticationApi implements AuthenticationApi {
         );
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          return Credentials(
-            id: user.uid,
-            token: 'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
+          return AuthResult(
+            credentials: Credentials(
+              id: user.uid,
+              token:
+                  'fake-phone-token-${DateTime.now().millisecondsSinceEpoch}',
+            ),
+            isNewUser: true, // Change to test different flows
+            userEntity: UserEntity(
+              id: user.uid,
+              email: user.email,
+              name: user.displayName,
+              avatarPath: user.photoURL,
+              creationDate: DateTime.now(),
+              lastUpdateDate: DateTime.now(),
+              onboarded: false, // User hasn't completed onboarding
+            ),
           );
         }
       }

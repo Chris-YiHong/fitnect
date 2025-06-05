@@ -72,7 +72,7 @@ abstract class AuthenticationRepository {
   /// The user is signed in automatically if the verification is successful
   /// We store the token in the secured storage
   /// throws [PhoneAuthException] if an error occurs
-  Future<void> verifyPhoneAuth(String verificationId, String otp);
+  Future<AuthResult> verifyPhoneAuth(String verificationId, String otp);
 
   /// Update the phone number of the current user
   /// The user is signed in automatically if the verification is successful
@@ -248,16 +248,18 @@ class HttpAuthenticationRepository implements AuthenticationRepository {
   }
 
   @override
-  Future<void> verifyPhoneAuth(String verificationId, String otp) async {
+  Future<AuthResult> verifyPhoneAuth(String verificationId, String otp) async {
     try {
       _logger.d('Verifying phone code');
-      final credentials = await _authenticationApi.verifyPhoneAuth(
+      final authResult = await _authenticationApi.verifyPhoneAuth(
         verificationId,
         otp,
       );
 
-      await _storage.write(value: credentials);
-      _httpClient.authToken = credentials.token;
+      await _storage.write(value: authResult.credentials);
+      _httpClient.authToken = authResult.credentials.token;
+
+      return authResult;
     } on ApiError catch (e) {
       throw PhoneAuthException.fromApiError(e);
     } catch (e) {
